@@ -1,0 +1,32 @@
+CREATE TABLE User(
+   ID             INT PRIMARY KEY,
+   UserName       varChar(50)    NOT NULL,
+   PasswordHASH   text           NOT NULL,
+   Email          varChar(50),
+   Name           varChar(50)
+);
+
+//Bruk når du vil bruke begrensete verdier(f.eks: Username,PasswordHASH)
+INSERT INTO TABLE_NAME (column1, column2, column3,...columnN)
+VALUES (value1, value2, value3,...valueN);
+
+//Bruk når du fyller in alle verdier(Username,PasswordHASH,Email,name)
+INSERT INTO TABLE_NAME VALUES (value1,value2,value3,...valueN);
+
+/*For forandring i tabell
+(f.eks en person Ivar, id=1991: 
+Update User 
+set PasswordHASH = New Value 
+WHERE ID = 1991;)*/
+
+UPDATE table_name
+SET column1 = value1, column2 = value2...., columnN = valueN
+WHERE [condition];
+
+//Slett ifra tabell
+/*(f.eks en person Ivar, id=1991:
+DELETE FROM User
+WHERE ID = 1991;)*/
+
+DELETE FROM table_name
+WHERE [condition];
