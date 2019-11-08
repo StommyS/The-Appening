@@ -2,11 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 //const db = require("./modules/db")(process.env.dbconnection)
-//const DEFAULT_PORT = 8080;
-
-//const presentationRoutes = require("./routs/presentations")
-
-//app.use("/presentation", presentationRoutes)
 
 
 /*
