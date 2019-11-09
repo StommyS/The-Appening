@@ -1,0 +1,26 @@
+Id(automatisk, så her blir det sendt DEFAULT info)
+user(name) må sendes
+pwHash(text) må sendes, text grunnet jeg ikke vet hvordan hashen vil se ut, og dette burde være bra nok for å lagre temmelig mye info.
+
+
+
+
+
+
+
+SQL kode:
+
+CREATE TABLE public."user"
+(
+    id integer NOT NULL DEFAULT nextval('user_id_seq'::regclass),
+    "user" name NOT NULL,
+    "pwHash" text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT user_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public."user"
+    OWNER to qgmznzykbumzex;
