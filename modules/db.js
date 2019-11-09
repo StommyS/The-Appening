@@ -11,13 +11,6 @@ const db = function(dbConnectionString){
         return userData;
     }
 
-    const createUser = async function(username, password){
-        userData = null
-        try {
-            userData = await runQuery('INSERT username into ')
-        }
-    }
-
     return {
         getuser : getUserByID
     }
