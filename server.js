@@ -19,7 +19,16 @@ app.use(express.json()); //for extracting json in the request-body
 
 // Sindres testkoder -----------------------------
 //app.use("/presentation", presentationRoutes)
-
+/*
+app.get('/user/:userID', function(req, res){
+    let user = db.getuser(req.body.userID)
+    if(user){
+        res.status(200).json(user)
+    } else{
+        throw "There is no user with that userID"
+    }
+});
+*/
 
 
 // endpoint - users POST -----------------------
