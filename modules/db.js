@@ -1,11 +1,23 @@
 const pg = require("pg");
 const db = function(dbConnectionString){
 
+    async function runQuery(query, params){
+        const client = new pg.Client(connectionString)
+        await client.connect() // Did I connect? throw an error??
+        const res = await client.query(query, params)
+        let respons = res.rows; // Did we get anything?? Dont care. SEP
+        await client.end()
+        console.log("failed 7")
+        return respons
+    }
+
     const getUserByID = async function(userID){
         userData = null
         try {
-             userData =  await runQuery('SELECT * from user where userID=$1',[userID])
+            console.log("failed 5")
+             userData =  await runQuery('SELECT * FROM user where userID=$1',[userID])
         } catch (error) {
+            console.log("failed 6")
             // Deal with error??
         }
         return userData;
