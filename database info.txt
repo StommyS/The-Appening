@@ -1,26 +1,17 @@
+user/
 Id(automatisk, så her blir det sendt DEFAULT info)
-user(name) må sendes
+user(name) må sendes(har blitt gjort unik)
 pwHash(text) må sendes, text grunnet jeg ikke vet hvordan hashen vil se ut, og dette burde være bra nok for å lagre temmelig mye info.
 
+presentation/
+pId(automatisk, send default)
+title, text(må sendes)
+fk_user_id(gjøres automatisk)
 
-
-
-
-
-
-SQL kode:
-
-CREATE TABLE public."user"
-(
-    id integer NOT NULL DEFAULT nextval('user_id_seq'::regclass),
-    "user" name NOT NULL,
-    "pwHash" text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT user_pkey PRIMARY KEY (id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-ALTER TABLE public."user"
-    OWNER to qgmznzykbumzex;
+slide/
+sId(automatisk, send default)
+type text
+text text[]
+image text[]
+style[]
+fk_presentation_pId(gjøres automatisk)
