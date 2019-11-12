@@ -10,32 +10,7 @@ const app = express(); //server-app
 // middleware ------------------------------------
 app.use(cors()); //allow all CORS requests
 app.use(express.json()); //for extracting json in the request-body
-
-
-// endpoint - users POST -----------------------
-app.post('/users', async function (req, res) {
-
-    let updata = req.body; //the data sent from the client
-
-
-    let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
-    let values = [updata.user, updata.pw];
-
-    try {
-        let result = await pool.query(sql, values);
-
-        if (result.rows.length > 0) {
-            res.status(200).json({ msg: "Insert OK" });
-        }
-        else {
-            throw "Insert failed";
-        }
-
-    }
-    catch (err) {
-        res.status(500).json({ error: err });
-    }
-});
+app.use('/', express.static('public'));//for serving client files
 
 // start server -----------------------------------
 var port = process.env.PORT || 3000;
