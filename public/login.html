@@ -26,21 +26,18 @@
     let result = document.getElementById('result');
     btnLogin.addEventListener('click', async function(evt) {
         let url = "http://localhost:3000/users/login";
-        let updata = {
-            user: user,
-            passwrd: pw.value            
-        }
         
         let cfg = {
             method: "GET",
             headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(updata)
         }
+        console.log(cfg)
         try {
-            console.log("Failed at try in login.html")
+            console.log("Failed before try in login.html")
             var resp = await fetch(url, cfg);
             var data = await resp.json();
-            result.innerHTML = data.msg; 
+            result.innerHTML = data.msg;
+            console.log("Failed after try in login.html") 
         }
         catch (err) {
             console.log("failed at catch err in login.html")

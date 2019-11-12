@@ -7,58 +7,28 @@ const cors = require('cors');
 const express = require('express');
 const app = express(); //server-app
 
-// Sindres testkoder -----------------------------
-//const db = require("./modules/db")(process.env.dbconnection)
-//const presentationRoutes = require("./routs/presentations")
+// Sindres testkoder -------------------------------------
+const db = require("./modules/db.js")(process.env.dbconnection)
+const presentationRoutes = require("./routes/presentations.js")
+const userRoutes = require("./routes/users.js")
+const loginRoutes = require("./routes/users.js")
+//--------------------------------------------------------
 
 
 
-// middleware ------------------------------------
+
+// middleware --------------------------------------------
 app.use(cors()); //allow all CORS requests
 app.use(express.json()); //for extracting json in the request-body
 
-// Sindres testkoder -----------------------------
-//app.use("/presentation", presentationRoutes)
-
-app.get('/users/login', function(req, res){
-    let user = db.getuser(req.body.userID)
-    if(user){
-        console.log("failed 3")
-        res.status(200).json(user)
-    } else{
-        console.log("failed 4")
-        throw "There is no user with that userID"
-    }
-});
+// Sindres testkoder--------------------------------------
+app.use("/users", userRoutes);// uses the code in routes users
+app.use("/presentation", presentationRoutes)
+//--------------------------------------------------------
 
 
 
-// endpoint - users POST -----------------------
-app.post('/users', async function (req, res) {
-
-    let updata = req.body; //the data sent from the client
-
-
-    let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
-    let values = [updata.user, updata.pw];
-
-    try {
-        let result = await pool.query(sql, values);
-
-        if (result.rows.length > 0) {
-            res.status(200).json({ msg: "Insert OK" });
-        }
-        else {
-            throw "Insert failed";
-        }
-
-    }
-    catch (err) {
-        res.status(500).json({ error: err });
-    }
-});
-
-// start server -----------------------------------
+// start server ------------------------------------------
 var port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log('Server listening on port 3000!');
