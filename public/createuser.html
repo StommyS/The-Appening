@@ -9,11 +9,9 @@
 </head>
 
 <body>
-    <h1>Wannabe-Powerpoint <br>on a sloppy day</h1>
-    <input type="text" id="User" placeholder="User">
-    <br>    
+    <input type="text" id="User" placeholder="User">    
     <input type="password" id="Pw" placeholder="Password">
-    <br>
+    <br><br>
     <button id="btnCreate">Create user</button>
     <br>
     <div id="result"></div>
@@ -24,12 +22,10 @@
     let pw = document.getElementById('Pw');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
-
-    
     btnCreate.addEventListener('click', async function(evt) {
         let url = "http://localhost:3000/users";
         let updata = {
-            user: user,
+            user: user.value,
             passwrd: pw.value            
         }
         

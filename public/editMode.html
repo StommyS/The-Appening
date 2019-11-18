@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDIT MODE</title>
+    <link href="../CSS/editModeCSS.css" rel="stylesheet">
+</head>
+
+<body>
+    <p id="loggedInnId" class="loggedInnClass">Logged inn as: USERNAME</p>
+    <div id="UI" class="UIDiv">
+        <div id="uiMenu" class="uiMenuDiv">
+            <div>
+                <button id="btnNewTitleSlide" class="button1">New Title Slide</button>
+                <br>
+                <button id="btnNewImageSlide" class="button1">New Image Slide</button>
+                <br>
+                <button id="btnNewTextSlide" class="button1">New Text Slide</button>
+            </div>
+            <div class="specialDivForThemes">
+                    <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
+                    <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
+                    <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
+                    <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
+                    <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
+                    <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
+            </div>
+            <div>
+                <button id="btnSave" class="button3">Save</button>
+                <br>
+                <button id="btnPresentations" class="button3">Presentations</button>
+                <br>
+                <button id="btnCreateNewPresentation" class="button3">Create New Presentation</button>
+            </div>
+            <div>
+                <button id="btnPresentationMode" class="button4" style="padding-top: 29px; padding-bottom: 29px;">Presentation Mode</button>
+                <br>
+                <button id="btnSignOut" class="button4">Sign out</button>
+            </div>
+        </div>
+        <div class="grid">
+            <div id="slideList" class="slideListDiv">
+            </div>
+            <div id="slidePreview" class="slidePreviewDiv">
+            </div>
+        </div>
+    </div>
+</body>
+
+<script> 
+//------------button Variables-----------
+let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
+let btnNewImageSlide = document.getElementById('btnNewImageSlide');
+let btnNewTextSlide = document.getElementById('btnNewTextSlide');
+let btnOrangeTheme = document.getElementById('btnOrangeTheme');
+let btnBWTheme = document.getElementById('btnBWTheme');
+let btnGreenTheme = document.getElementById('btnGreenTheme');
+let btnBlueTheme = document.getElementById('btnBlueTheme');
+let btnRedTheme = document.getElementById('btnRedTheme');
+let btnSave = document.getElementById('btnSave');
+let btnPresentations = document.getElementById('btnPresentations');
+let btnCreateNewPresentation = document.getElementById('btnCreateNewPresentation');
+let btnPresentationMode = document.getElementById('btnPresentationMode');
+let btnSignOut = document.getElementById('btnSignOut');
+
+//--------------Other variables--------------
+let slideList = document.getElementById('slideList')
+let slidePreview = document.getElementById('slidePreview')
+
+
+//--------------buttons--------------
+    btnNewTitleSlide.addEventListener('click', async function(evt) {
+        console.log("newTitle");
+        });   
+    btnNewImageSlide.addEventListener('click', async function(evt) {
+        console.log("newImage");
+        });
+    btnNewTextSlide.addEventListener('click', async function(evt) {
+        console.log("newText");
+        });
+    btnOrangeTheme.addEventListener('click', async function(evt) {
+        console.log("Orange");
+        });
+    btnBWTheme.addEventListener('click', async function(evt) {
+        console.log("Black and White");
+        });
+    btnGreenTheme.addEventListener('click', async function(evt) {
+        console.log("Green");
+        });
+    btnBlueTheme.addEventListener('click', async function(evt) {
+        console.log("Blue");
+        });
+    btnRedTheme.addEventListener('click', async function(evt) {
+        console.log("Red");
+        });
+    btnSave.addEventListener('click', async function(evt) {
+        console.log("Save");
+        });
+    btnPresentations.addEventListener('click', async function(evt) {
+        console.log("Presentations");
+        });
+    btnCreateNewPresentation.addEventListener('click', async function(evt) {
+        console.log("Create New Presentation");
+        });
+    btnPresentationMode.addEventListener('click', async function(evt) {
+        console.log("Presentation Mode");
+        });
+    btnSignOut.addEventListener('click', async function(evt) {
+        //offcorse need alot of other codes. 
+        window.location.href = `index.html`
+        console.log("Sign Out");
+        });
+    
+
+    //---------loading slides in the presentation-------------
+    loadSlides();
+    //this code needs some work, need to connect to server, get the slides, 
+    //and place the info inside the slideInfo variable.
+    async function loadSlides(){
+
+    let response = await fetch("server? database? dont know");
+    let slides = await response.json();
+
+    for (let value of slides){
+
+        let slideDiv = document.createElement("div")
+        let slideInfo = `The code that gets info from the database`;
+
+        slideDiv.addEventListener("click",function(){
+            slidePreview.innerHTML = slideInfo;
+            //and some other code to change the current slide that we are working on.
+        })
+        
+        slideDiv.innerHTML = slideInfo;
+        slideList.appendChild(slideDiv);
+
+        }
+    }
+</script>
+
+</html>

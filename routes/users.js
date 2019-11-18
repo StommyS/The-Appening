@@ -5,27 +5,8 @@ const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("../modules/db")(dbConnection)
 
 // endpoint - users POST -----------------------
-route.post('/', async function (req, res, next) {
-    console.log("begynnelsen av post")
-    let updata = req.body; //the data sent from the client
-
-    let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
-    let values = [updata.user, updata.pw];
-
-    try {
-        let result = await pool.query(sql, values);
-        if (result.rows.length > 0) {
-            res.status(200).json({ msg: "Insert OK" });
-        }
-        else {
-            throw "Insert failed";
-        }
-
-    }
-    catch (err) {
-        console.log("error at catch")
-        res.status(500).json({ error: err });
-    }
+route.post('/user', async function (req, res, next) {
+    let user = db.createuser()
 });
 
 route.get('/:userID', async function(req,res){

@@ -20,14 +20,26 @@ const db = function(dbConnectionString){
         return userData;
     }
 
-    const createUser = async function(){
-        userData = null
+    const createUser = async function(req, res){
+        let updata = req.body;
+
+        let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
+        let values = [updata.user, updata.pw];
+    
         try {
-             userData =  await runQuery('INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *',[userID])
-        } catch (error) {
-            // Deal with error??
+            let result = await pool.query(sql, values);
+    
+            if (result.rows.length > 0) {
+                res.status(200).json({ msg: "Creation OK" });
+            }
+            else {
+                throw "GO AWAY!!";
+            }
+    
         }
-        return userData;
+        catch (err) {
+            res.status(500).json({ error: err });
+        }
     }
 
     return {
