@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PRESENTATION TITLE</title>
+</head>
+<body>
+<div id="container"></div>
+
+</body>
+<script>
+    let presentation;
+    const container = document.getElementById('container');
+
+    //add event listeners
+    container.addEventListener('click', nextSlide);
+    // button presses
+    window.addEventListener("keydown", keyPress);
+
+    window.onload = init();
+
+    function init() {
+        //let presentation = localStorage.getItem(); // get the actual presentation
+
+        //temporary presentation
+        presentation = {
+            id: undefined,
+            title: "ye olde presentatione",
+            theme: "cooltheme",
+            slides: [`htmltext`,"htmltextalso","htmltextbutnotreally"]
+        };
+
+        container.innerHTML = presentation.slides[0];
+    }
+
+    let currSlide = 0;
+
+
+    function nextSlide() {
+        currSlide++;
+        if(presentation.slides[currSlide]) {
+            container.innerHTML = "";
+            container.innerHTML = presentation.slides[currSlide];
+        }else {
+            container.innerHTML = "PRESENTATION OVER NOTHING TO SEE HERE";
+            // redirect to edit page 1
+        }
+    }
+
+    function prevSlide() {
+        currSlide--;
+        if(presentation.slides[currSlide]) {
+            container.innerHTML = "";
+            container.innerHTML = presentation.slides[currSlide];
+        }else {
+            container.innerHTML = presentation.slides[0];
+        }
+    }
+
+    function exitPres() {
+        alert("LEAVING PRESENTATION");
+    }
+
+    function keyPress(evt) {
+        console.log(evt);
+        let key = evt.keyCode;
+        switch(key) {
+            case 37: prevSlide(); break;
+            case 38: nextSlide(); break;
+            case 39: nextSlide(); break;
+            case 40: prevSlide(); break;
+            case 32: nextSlide(); break;
+            case 27: exitPres(); break;
+            case 13: nextSlide(); break;
+        }
+        //find keys
+        // up, down, left, right, space, escape, enter
+    }
+
+</script>
+</html>
