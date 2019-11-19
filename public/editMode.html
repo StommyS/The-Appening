@@ -20,12 +20,12 @@
                 <button id="btnNewTextSlide" class="button1">New Text Slide</button>
             </div>
             <div class="specialDivForThemes">
-                    <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
-                    <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
-                    <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
-                    <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
-                    <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
-                    <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
+                <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
+                <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
+                <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
+                <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
+                <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
+                <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
             </div>
             <div>
                 <button id="btnSave" class="button3">Save</button>
@@ -35,7 +35,8 @@
                 <button id="btnCreateNewPresentation" class="button3">Create New Presentation</button>
             </div>
             <div>
-                <button id="btnPresentationMode" class="button4" style="padding-top: 29px; padding-bottom: 29px;">Presentation Mode</button>
+                <button id="btnPresentationMode" class="button4"
+                    style="padding-top: 29px; padding-bottom: 29px;">Presentation Mode</button>
                 <br>
                 <button id="btnSignOut" class="button4">Sign out</button>
             </div>
@@ -44,175 +45,193 @@
             <div id="slideList" class="slideListDiv">
             </div>
             <div id="slidePreview">
-            <div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
-                <h1 style="font-size: 150px;">Title</h1>
+                <div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
+                    <h1 style="font-size: 150px;">Title</h1>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </body>
 
-<script> 
-//------------button Variables-----------
-let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
-let btnNewImageSlide = document.getElementById('btnNewImageSlide');
-let btnNewTextSlide = document.getElementById('btnNewTextSlide');
-let btnOrangeTheme = document.getElementById('btnOrangeTheme');
-let btnBWTheme = document.getElementById('btnBWTheme');
-let btnGreenTheme = document.getElementById('btnGreenTheme');
-let btnBlueTheme = document.getElementById('btnBlueTheme');
-let btnRedTheme = document.getElementById('btnRedTheme');
-let btnSave = document.getElementById('btnSave');
-let btnPresentations = document.getElementById('btnPresentations');
-let btnCreateNewPresentation = document.getElementById('btnCreateNewPresentation');
-let btnPresentationMode = document.getElementById('btnPresentationMode');
-let btnSignOut = document.getElementById('btnSignOut');
+<script>
+    //------------button Variables-----------
+    let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
+    let btnNewImageSlide = document.getElementById('btnNewImageSlide');
+    let btnNewTextSlide = document.getElementById('btnNewTextSlide');
+    let btnOrangeTheme = document.getElementById('btnOrangeTheme');
+    let btnBWTheme = document.getElementById('btnBWTheme');
+    let btnGreenTheme = document.getElementById('btnGreenTheme');
+    let btnBlueTheme = document.getElementById('btnBlueTheme');
+    let btnRedTheme = document.getElementById('btnRedTheme');
+    let btnSave = document.getElementById('btnSave');
+    let btnPresentations = document.getElementById('btnPresentations');
+    let btnCreateNewPresentation = document.getElementById('btnCreateNewPresentation');
+    let btnPresentationMode = document.getElementById('btnPresentationMode');
+    let btnSignOut = document.getElementById('btnSignOut');
 
-//--------------Other variables--------------
-let slideList = document.getElementById('slideList');
-let slidePreview = document.getElementById('slidePreview');
-let slidePreviewDiv = document.getElementById('slidePreviewDiv');
+    //--------------Other variables--------------
+    let slideList = document.getElementById('slideList');
+    let slidePreview = document.getElementById('slidePreview');
+    let slidePreviewDiv = document.getElementById('slidePreviewDiv');
 
-let titleSlideTemp = `<div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
-                <h1 style="font-size: 150px;">Title</h1>
-            </div>`;
-let imageSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
+    let titleSlideTemp = `<div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true"><h1 style="font-size: 150px;">Title</h1></div>`;
+    let imageSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
                 <h1 style="font-size: 60px;">Image Text</h1>
                 <div><img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg"></div>
             </div>`;
-let textSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" contenteditable="true">
+    let textSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" contenteditable="true">
                 <h1 style="font-size: 60px;">Text Title</h1>
-                <ul style="margin: 10px 170px 10px 170px; text-align: left;">
-                    <li style="font-size: 40px;"></li>
-                </ul>
-                </div>
-            </div>`;
-let countSlides = 0;
-//--------------buttons--------------
-    btnNewTitleSlide.addEventListener('click', async function(evt) {
+                <ul style="margin: 10px 170px 10px 170px; text-align: left;"><li style="font-size: 40px;"></li></ul></div></div>`;
+
+    //-------------Objects-------------
+    let presentation = {
+        title: "ye olde presentatione",
+        theme: "cooltheme",
+        slides: []
+    };
+
+    //--------------buttons--------------
+    btnNewTitleSlide.addEventListener('click', async function (evt) {
         console.log("newTitle");
         //save current slide
+        presentation.slides.push(slidePreview.innerHTML)
         //create new slide
 
         //-----load all slides-----
-        loadSlides(slidePreview.innerHTML);
+        createNewSlide(slidePreview.innerHTML);
 
         //change that slide to a Title slide
         changeCurrentSlide(titleSlideTemp);
-        });   
+    });
 
-    btnNewImageSlide.addEventListener('click', async function(evt) {
+    btnNewImageSlide.addEventListener('click', async function (evt) {
         console.log("newImage");
         //save current slide
+        presentation.slides.push(slidePreview.innerHTML)
         //create new slide
 
         //-----load all slides-----
-        loadSlides(slidePreview.innerHTML);
+        createNewSlide(slidePreview.innerHTML);
 
         //change that slide to a Image slide
         changeCurrentSlide(imageSlideTemp);
-        });
+    });
 
-    btnNewTextSlide.addEventListener('click', async function(evt) {
+    btnNewTextSlide.addEventListener('click', async function (evt) {
         console.log("newText");
         //-----save current slide-----
+        presentation.slides.push(slidePreview.innerHTML)
         //-----create new slide-----
 
         //-----load all slides-----
-        loadSlides(slidePreview.innerHTML);
+        createNewSlide(slidePreview.innerHTML);
 
         //-----change that slide to a Text slide-----
         changeCurrentSlide(textSlideTemp)
-        });
+    });
 
-    btnOrangeTheme.addEventListener('click', async function(evt) {
+    btnOrangeTheme.addEventListener('click', async function (evt) {
         console.log("Orange");
         slidePreviewDiv.style.backgroundColor = "orange";
         slidePreviewDiv.style.color = "rgb(151, 85, 4)";
-        });
+    });
 
-    btnBWTheme.addEventListener('click', async function(evt) {
+    btnBWTheme.addEventListener('click', async function (evt) {
         console.log("Black and White");
         slidePreviewDiv.style.backgroundColor = "white";
         slidePreviewDiv.style.color = "black";
-        });
+    });
 
-    btnGreenTheme.addEventListener('click', async function(evt) {
+    btnGreenTheme.addEventListener('click', async function (evt) {
         console.log("Green");
         slidePreviewDiv.style.backgroundColor = "green";
         slidePreviewDiv.style.color = "rgb(4, 151, 4)";
-        });
-    btnBlueTheme.addEventListener('click', async function(evt) {
+    });
+    btnBlueTheme.addEventListener('click', async function (evt) {
         console.log("Blue");
         slidePreviewDiv.style.backgroundColor = "blue";
         slidePreviewDiv.style.color = "rgb(4, 4, 151)";
-        });
+    });
 
-    btnRedTheme.addEventListener('click', async function(evt) {
+    btnRedTheme.addEventListener('click', async function (evt) {
         console.log("Red");
         slidePreviewDiv.style.backgroundColor = "red";
         slidePreviewDiv.style.color = "rgb(151, 4, 4)";
-        });
+    });
 
-    btnSave.addEventListener('click', async function(evt) {
+    btnSave.addEventListener('click', async function (evt) {
         console.log("Save");
-        });
+        window.localStorage.removeItem('presentation');
+        window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
+    });
 
-    btnPresentations.addEventListener('click', async function(evt) {
+    btnPresentations.addEventListener('click', async function (evt) {
         console.log("Presentations");
-        });
+    });
 
-    btnCreateNewPresentation.addEventListener('click', async function(evt) {
+    btnCreateNewPresentation.addEventListener('click', async function (evt) {
         console.log("Create New Presentation");
-        });
+    });
 
-    btnPresentationMode.addEventListener('click', async function(evt) {
+    btnPresentationMode.addEventListener('click', async function (evt) {
         console.log("Presentation Mode");
-        });
-        
-    btnSignOut.addEventListener('click', async function(evt) {
+    });
+
+    btnSignOut.addEventListener('click', async function (evt) {
         //offcorse need alot of other codes. 
         window.location.href = `index.html`
         console.log("Sign Out");
-        });
-    
+    });
+
+    //---------l
 
     //---------loading slides in the presentation-------------
-    
     //this code needs some work, need to connect to server, get the slides, 
     //and place the info inside the slideInfo variable.
-    async function loadSlides(typeOfSlide){
-        slideList.innerHTML = '<div>test</div>'
-        countSlides++;
-    //let response = await fetch("server? database? dont know");
-    //let slides = await response.json();
-    
-    for (let i = 0; i<countSlides; i++){
+    async function loadSlides(typeOfSlide) {
+        //removing all childs
+        while (slideList.firstChild) {
+            slideList.removeChild(slideList.firstChild);
+        }
 
-        let slideDiv = document.createElement("div")
-        slidePreviewDiv.classList.toggle('slidePreviewDiv');
-        slideDiv.addEventListener("click",function(){
-            slidePreview.innerHTML = slidePreviewDiv;
-            //and some other code to change the current slide that we are working on.
-        })
-        
-        slidePreviewDiv.innerHTML = typeOfSlide;
-        slideList.appendChild(slidePreviewDiv);
+        for (let i = 0; i < presentation.slides.length; i++) {
+
+            let slideDiv = document.createElement("div")
+
+            slideDiv.addEventListener("click", function () {
+                slidePreview.innerHTML = slidePreviewDiv;
+                //and some other code to change the current slide that we are working on.
+            })
+
+            slideDiv.innerHTML = typeOfSlide;
+            slideList.appendChild(slideDiv);
 
         }
     }
-    
-    function changeCurrentSlide(newSlideType){
+
+    function createNewSlide(typeOfSlide){
+        let slideDiv = document.createElement("div")
+
+            slideDiv.addEventListener("click", function () {
+                slidePreview.innerHTML = slideDiv;
+                //and some other code to change the current slide that we are working on.
+            })
+
+            slideDiv.innerHTML = typeOfSlide;
+            slideList.appendChild(slideDiv);
+    }
+
+    function changeCurrentSlide(newSlideType) {
         slidePreview.innerHTML = newSlideType;
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
     }
     //slidePreviewDiv.classList.toggle('slidePreviewDiv');
-    
-    function changeCurrentClass(){
+
+    function changeCurrentClass() {
         document.getElementById("MyElement").classList.remove('MyClass');
         document.getElementById("MyElement").classList.add('MyClass');
-    
+
     }
 
 </script>

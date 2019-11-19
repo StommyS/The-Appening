@@ -1,52 +1,50 @@
 const pg = require("pg");
-const db = function(dbConnectionString){
+
+const db = function(dconnectionString) {
+    const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
-        const client = new pg.Client(dbConnectionString)
-        await client.connect() // Did I connect? throw an error??
-        const res = await client.query(query, params)
-        let respons = res.rows; // Did we get anything?? Dont care. SEP
-        await client.end()
-        return respons
+        await pool.connect(); // Did I connect? throw an error??
+        const res = await pool.query(query, params);
+        let response = res.rows; // Did we get anything?? Dont care. SEP
+        await pool.end();
+        return response
     }
 
-    const getUserByID = async function(userID){
-        userData = null
+    const createUser = async function(name,pwhash){
+        let userData = null;
+        console.log("starting create user");
+
         try {
-             userData =  await runQuery('SELECT * FROM users where userID=$1',[userID])
+            userData =  await runQuery('INSERT INTO "user" (id, "user", "pwHash") VALUES(DEFAULT, $1, $2) RETURNING *',[name,pwhash]);
+            console.log(userData);
         } catch (error) {
+            console.log("major error!");
+            console.log(error);
             // Deal with error??
         }
         return userData;
-    }
+    };
 
-    const createUser = async function(req, res){
-        let updata = req.body;
+    const getUserByID = async function(name,pwhash){
+        let userData = null;
+        console.log("starting create user");
 
-        let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
-        let values = [updata.user, updata.pw];
-    
         try {
-            let result = await pool.query(sql, values);
-    
-            if (result.rows.length > 0) {
-                res.status(200).json({ msg: "Creation OK" });
-            }
-            else {
-                throw "GO AWAY!!";
-            }
-    
+            userData =  await runQuery('INSERT INTO "user" (id, "user", "pwHash") VALUES(DEFAULT, $1, $2) RETURNING *',[name,pwhash]);
+            console.log(userData);
+        } catch (error) {
+            console.log("major error!");
+            console.log(error);
+            // Deal with error??
         }
-        catch (err) {
-            res.status(500).json({ error: err });
-        }
-    }
+        return userData;
+    };
 
     return {
         createuser : createUser,
         getuser : getUserByID
     }
-}
-
+};
 
 module.exports = db;
