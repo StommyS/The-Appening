@@ -18,7 +18,7 @@ padding: 5px;
 
 .slideListDiv{
     width: auto;
-    height: 300px;
+    height: 500px;
     border-style: solid;
     border-width: 2px;
     background-color: white;
@@ -26,13 +26,19 @@ padding: 5px;
 }
 
 .slidePreviewDiv{
+    text-align: center;
     width: auto;
-    height: 300px;
+    height: 500px;
     border-style: solid;
     border-width: 2px;
     background-color: white;
     margin: 10px 10px 10px 10px;
 }
+
+.slidePreviewDivSmall{
+    
+}
+
 .grid{
     display: grid;
     grid-template-columns: 20% 80%;
@@ -71,7 +77,7 @@ button{
     padding-bottom: 2px;
     grid-template-columns: 33.32% 33.32% 33.32%;
     border-radius: 5px;
-    background-color: lightgrey; 
+    background-color: lightgray; 
 }
 .button2{
     padding: 15px 20px;
@@ -87,4 +93,9 @@ body{
     min-width:1000px;
     width: auto !important;  
     width:1000px;
+ }
+
+ img{
+     width: auto;
+     height: 300px;
  }

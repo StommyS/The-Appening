@@ -43,8 +43,11 @@
         <div class="grid">
             <div id="slideList" class="slideListDiv">
             </div>
-            <div id="slidePreview" class="slidePreviewDiv">
+            <div id="slidePreview">
+            <div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
+                <h1 style="font-size: 150px;">Title</h1>
             </div>
+        </div>
         </div>
     </div>
 </body>
@@ -66,47 +69,107 @@ let btnPresentationMode = document.getElementById('btnPresentationMode');
 let btnSignOut = document.getElementById('btnSignOut');
 
 //--------------Other variables--------------
-let slideList = document.getElementById('slideList')
-let slidePreview = document.getElementById('slidePreview')
+let slideList = document.getElementById('slideList');
+let slidePreview = document.getElementById('slidePreview');
+let slidePreviewDiv = document.getElementById('slidePreviewDiv');
 
-
+let titleSlideTemp = `<div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
+                <h1 style="font-size: 150px;">Title</h1>
+            </div>`;
+let imageSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" style="text-align: center;" contenteditable="true">
+                <h1 style="font-size: 60px;">Image Text</h1>
+                <div><img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg"></div>
+            </div>`;
+let textSlideTemp = `<div id="slidePreviewDiv"  class="slidePreviewDiv" contenteditable="true">
+                <h1 style="font-size: 60px;">Text Title</h1>
+                <ul style="margin: 10px 170px 10px 170px; text-align: left;">
+                    <li style="font-size: 40px;"></li>
+                </ul>
+                </div>
+            </div>`;
+let countSlides = 0;
 //--------------buttons--------------
     btnNewTitleSlide.addEventListener('click', async function(evt) {
         console.log("newTitle");
+        //save current slide
+        //create new slide
+
+        //-----load all slides-----
+        loadSlides(slidePreview.innerHTML);
+
+        //change that slide to a Title slide
+        changeCurrentSlide(titleSlideTemp);
         });   
+
     btnNewImageSlide.addEventListener('click', async function(evt) {
         console.log("newImage");
+        //save current slide
+        //create new slide
+
+        //-----load all slides-----
+        loadSlides(slidePreview.innerHTML);
+
+        //change that slide to a Image slide
+        changeCurrentSlide(imageSlideTemp);
         });
+
     btnNewTextSlide.addEventListener('click', async function(evt) {
         console.log("newText");
+        //-----save current slide-----
+        //-----create new slide-----
+
+        //-----load all slides-----
+        loadSlides(slidePreview.innerHTML);
+
+        //-----change that slide to a Text slide-----
+        changeCurrentSlide(textSlideTemp)
         });
+
     btnOrangeTheme.addEventListener('click', async function(evt) {
         console.log("Orange");
+        slidePreviewDiv.style.backgroundColor = "orange";
+        slidePreviewDiv.style.color = "rgb(151, 85, 4)";
         });
+
     btnBWTheme.addEventListener('click', async function(evt) {
         console.log("Black and White");
+        slidePreviewDiv.style.backgroundColor = "white";
+        slidePreviewDiv.style.color = "black";
         });
+
     btnGreenTheme.addEventListener('click', async function(evt) {
         console.log("Green");
+        slidePreviewDiv.style.backgroundColor = "green";
+        slidePreviewDiv.style.color = "rgb(4, 151, 4)";
         });
     btnBlueTheme.addEventListener('click', async function(evt) {
         console.log("Blue");
+        slidePreviewDiv.style.backgroundColor = "blue";
+        slidePreviewDiv.style.color = "rgb(4, 4, 151)";
         });
+
     btnRedTheme.addEventListener('click', async function(evt) {
         console.log("Red");
+        slidePreviewDiv.style.backgroundColor = "red";
+        slidePreviewDiv.style.color = "rgb(151, 4, 4)";
         });
+
     btnSave.addEventListener('click', async function(evt) {
         console.log("Save");
         });
+
     btnPresentations.addEventListener('click', async function(evt) {
         console.log("Presentations");
         });
+
     btnCreateNewPresentation.addEventListener('click', async function(evt) {
         console.log("Create New Presentation");
         });
+
     btnPresentationMode.addEventListener('click', async function(evt) {
         console.log("Presentation Mode");
         });
+        
     btnSignOut.addEventListener('click', async function(evt) {
         //offcorse need alot of other codes. 
         window.location.href = `index.html`
@@ -115,29 +178,43 @@ let slidePreview = document.getElementById('slidePreview')
     
 
     //---------loading slides in the presentation-------------
-    loadSlides();
+    
     //this code needs some work, need to connect to server, get the slides, 
     //and place the info inside the slideInfo variable.
-    async function loadSlides(){
-
-    let response = await fetch("server? database? dont know");
-    let slides = await response.json();
-
-    for (let value of slides){
+    async function loadSlides(typeOfSlide){
+        slideList.innerHTML = '<div>test</div>'
+        countSlides++;
+    //let response = await fetch("server? database? dont know");
+    //let slides = await response.json();
+    
+    for (let i = 0; i<countSlides; i++){
 
         let slideDiv = document.createElement("div")
-        let slideInfo = `The code that gets info from the database`;
-
+        slidePreviewDiv.classList.toggle('slidePreviewDiv');
         slideDiv.addEventListener("click",function(){
-            slidePreview.innerHTML = slideInfo;
+            slidePreview.innerHTML = slidePreviewDiv;
             //and some other code to change the current slide that we are working on.
         })
         
-        slideDiv.innerHTML = slideInfo;
-        slideList.appendChild(slideDiv);
+        slidePreviewDiv.innerHTML = typeOfSlide;
+        slideList.appendChild(slidePreviewDiv);
 
         }
     }
+    
+    function changeCurrentSlide(newSlideType){
+        slidePreview.innerHTML = newSlideType;
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+    }
+    //slidePreviewDiv.classList.toggle('slidePreviewDiv');
+    
+    function changeCurrentClass(){
+        document.getElementById("MyElement").classList.remove('MyClass');
+        document.getElementById("MyElement").classList.add('MyClass');
+    
+    }
+
 </script>
 
 </html>
