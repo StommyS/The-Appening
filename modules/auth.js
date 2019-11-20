@@ -21,7 +21,9 @@ const authenticate = function (req, res, next) {
 };
 
 
-const dbURI = "postgres://qgmznzykbumzex:bdde0f1eda44c90c849c120f53b24c702aae8d782adb6f11b33bb535cb00d284@ec2-54-217-225-16.eu-west-1.compute.amazonaws.com:5432/d1kp021qnmfhaf" + "?ssl=true";
+
+const secrets = require('../secret.js');
+const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("./db")(dbConnection);
 
