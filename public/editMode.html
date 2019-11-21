@@ -108,7 +108,8 @@
     window.onload = init();
     function init() {
         presentation = JSON.parse(window.localStorage.getItem('presentation'));
-        if (!presentation.slides[0]) {
+        //window.localStorage.removeItem('presentation');
+        if (!presentation) {
             presentation = {
                 id: undefined,
                 title: "ye olde presentatione",

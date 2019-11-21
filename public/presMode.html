@@ -17,16 +17,16 @@
     window.addEventListener("keydown", keyPress);
     window.onload = init();
     function init() {
-        //presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
+        presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
         //temporary presentation
-        
+        /*
         presentation = {
             id: undefined,
             title: "ye olde presentatione",
             theme: "cooltheme",
             slides: [`htmltext`,"htmltextalso","htmltextbutnotreally"]
         };
-        
+        */
         container.innerHTML = presentation.slides[0];
         console.log(presentation)
     }
