@@ -1,39 +1,83 @@
-const check = require('../modules/token.js');
-
-const pg = require("pg");
 const express = require("express");
 const route = express.Router();
-const dbURI = "postgres://qgmznzykbumzex:bdde0f1eda44c90c849c120f53b24c702aae8d782adb6f11b33bb535cb00d284@ec2-54-217-225-16.eu-west-1.compute.amazonaws.com:5432/d1kp021qnmfhaf" + "?ssl=true";
+
+const secrets = require('../secret.js');
+const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("../modules/db")(dbConnection);
-const pool = new pg.Pool({ connectionString: dbConnection });
 
 const authenticate = require('../modules/auth.js');
 
 // endpoint - users POST -----------------------
 
 route.post('/create', async function (req, res) {
+    let updata = req.body;
 
-    let updata = req.body; //the data sent from the client
-
+    /// TODO Hashing
     //hashing the password before it is stored in the DB
-    let hash = 12345;
+    let hash = updata.password + 12345;
 
     try {
-        console.log("yello");
-        db.createuser(updata.name,hash);
-        //createuser(updata.name,hash);
+        let createdUser = await db.createuser(updata.name, hash, updata.email);
+        if(await createdUser) {
+            res.status(200).json({message: "User created successfully", user: createdUser});
+        }
+        else {
+            res.status(500).json({message: "We couldn't create that user."});
+        }
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ error: err }); //send error response
+        res.status(500).json({ error: err });
     }
 });
 
-route.get('/:userID', async function(req,res){
-    let user = await db.getuser(req.params.userID);
-    res.status(200).json(user)
+route.get('/', async function(req,res) {
+    let updata = req.body;
+    let user = null;
+    try {
+        user = await db.getuser(updata.name);
+        if(await user) {
+            await res.status(200).json({message: "User obtained", user: user});
+        }
+        else {
+            res.status(500).json({message: "We couldn't find that user."})
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
 });
+
+route.delete('/delete', async function (req, res) {
+   let updata = req.body;
+   try {
+       let deletedUser = await db.deleteuser(updata.name);
+       await res.status(200).json({message: "User successfully deleted", user: deletedUser});
+   }
+   catch(err) {
+       console.log(err);
+       res.status(500).json({error: err});
+   }
+});
+
+route.delete('/wipe', async function(req,res) {
+    try {
+        let deletion = await db.deleteall();
+        if(await deletion) {
+            res.status(200).json({message: "Users table cleared."});
+        }
+        else {
+            res.status(500).json({message: "Could not clear users table."})
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
+});
+
 
 //TEMP ARRAY
 const database = [];
@@ -41,7 +85,7 @@ const database = [];
 route.post('/login', async function (req, res) {
     let reqinfo = req.body;
     let user = database.find(user => user.name === reqinfo.name);
-    let user = await db.getuser(reqinfo.name);
+    //let user = await db.getuser(reqinfo.name);
 
     if(user) {
         let pw = user.password;
@@ -62,8 +106,6 @@ route.post('/login', async function (req, res) {
 
 });
 
-// does not work but I have no clue why
-route.get('/data', function (req, res) {
-    console.log(req.header);
-    res.status(500).json({message: "here is your data"});
-});
+
+
+module.exports = route;

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PRESENTATION TITLE</title>
+</head>
+<body>
+<div id="container"></div>
+
+</body>
+<script>
+    let presentation;
+    const container = document.getElementById('container');
+    //add event listeners
+    container.addEventListener('click', nextSlide);
+    // button presses
+    window.addEventListener("keydown", keyPress);
+    window.onload = init();
+    function init() {
+        //presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
+        //temporary presentation
+        
+        presentation = {
+            id: undefined,
+            title: "ye olde presentatione",
+            theme: "cooltheme",
+            slides: [`htmltext`,"htmltextalso","htmltextbutnotreally"]
+        };
+        
+        container.innerHTML = presentation.slides[0];
+        console.log(presentation)
+    }
+    let currSlide = 0;
+    function nextSlide() {
+        currSlide++;
+        if(presentation.slides[currSlide]) {
+            container.innerHTML = "";
+            container.innerHTML = presentation.slides[currSlide];
+            console.log(presentation.slides[currSlide])
+        }else {
+            container.innerHTML = "PRESENTATION OVER NOTHING TO SEE HERE";
+            window.location.href = `editMode.html`;
+        }
+    }
+    function prevSlide() {
+        currSlide--;
+        if(presentation.slides[currSlide]) {
+            container.innerHTML = "";
+            container.innerHTML = presentation.slides[currSlide];
+        }else {
+            container.innerHTML = presentation.slides[0];
+        }
+    }
+    function exitPres() {
+        alert("LEAVING PRESENTATION");
+        window.location.href = `editMode.html`;
+    }
+    function keyPress(evt) {
+        console.log(evt);
+        let key = evt.keyCode;
+        switch(key) {
+            case 37: prevSlide(); break; // left
+            case 38: nextSlide(); break; // up
+            case 39: nextSlide(); break; // right
+            case 40: prevSlide(); break; // down
+            case 32: nextSlide(); break; // space
+            case 27: exitPres(); break;  // esc
+            case 13: nextSlide(); break; // enter
+        }
+        //find keys
+        // up, down, left, right, space, escape, enter
+    }
+</script>
+</html>

@@ -4,7 +4,7 @@ height: 600px;
 margin: 1px;
 padding: 5px;
 }
-
+ 
 .uiMenuDiv{
     display: grid;
     grid-template-columns: 20% 40% 20% 20%;
@@ -38,11 +38,18 @@ padding: 5px;
 .slidePreviewDivSmall{
     text-align: center;
     width: auto;
-    height: 500px;
+    height: 150px;
+    font-size: 16;
     border-style: solid;
     border-width: 2px;
     background-color: white;
-    margin: 10px 10px 10px 10px;
+    margin: 2px 2px 2px 2px;
+}
+
+
+.slidePreviewDivSmall>img{
+    width: auto;
+    height: 100px;
 }
 
 .grid{
