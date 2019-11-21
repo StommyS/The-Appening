@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My document</title>
-    <link href="../CSS/CSS.css" rel="stylesheet">
+    <title>Home</title>
+    <link href="./CSS/CSS.css" rel="stylesheet">
 </head>
 
 <body>
@@ -14,5 +14,9 @@
     <br>
     <a href="login.html"><button>Login</button></a>
 </body>
+<script>
+let presentation = JSON.parse(window.localStorage.getItem('presentation'));
+console.log(presentation);
+</script>
 
 </html>

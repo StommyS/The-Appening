@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create user</title>
-    <link href="../CSS/CSS.css" rel="stylesheet">
+    <link href="./CSS/CSS.css" rel="stylesheet">
 </head>
 
 <body>
     <h1>Wannabe-Powerpoint <br>on a sloppy day</h1>
-    <input type="text" id="User" placeholder="User">
-    <br>    
+    <input type="text" id="User" placeholder="User">    
+    <br>
     <input type="password" id="Pw" placeholder="Password">
     <br>
+    <input type="email" id="email" placeholder="Email">
+    <br><br>
     <button id="btnCreate">Create user</button>
     <br>
     <div id="result"></div>
@@ -24,12 +26,10 @@
     let pw = document.getElementById('Pw');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
-
-    
     btnCreate.addEventListener('click', async function(evt) {
         let url = "http://localhost:3000/users";
         let updata = {
-            user: user,
+            user: user.value,
             passwrd: pw.value            
         }
         
