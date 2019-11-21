@@ -1,37 +1,110 @@
-const express = require("express")
+const express = require("express");
 const route = express.Router();
-const dbURI = "postgres://qgmznzykbumzex:bdde0f1eda44c90c849c120f53b24c702aae8d782adb6f11b33bb535cb00d284@ec2-54-217-225-16.eu-west-1.compute.amazonaws.com:5432/d1kp021qnmfhaf" + "?ssl=true";
+
+const secrets = require('../secret.js');
+const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
-const db = require("../modules/db")(dbConnection)
+const db = require("../modules/db")(dbConnection);
+
+const authenticate = require('../modules/auth.js');
 
 // endpoint - users POST -----------------------
-route.post('/', async function (req, res, next) {
-    console.log("begynnelsen av post")
-    let updata = req.body; //the data sent from the client
 
-    let sql = 'INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *';
-    let values = [updata.user, updata.pw];
+route.post('/create', async function (req, res) {
+    let updata = req.body;
+
+    /// TODO Hashing
+    //hashing the password before it is stored in the DB
+    let hash = updata.password + 12345;
 
     try {
-        let result = await pool.query(sql, values);
-        if (result.rows.length > 0) {
-            res.status(200).json({ msg: "Insert OK" });
+        let createdUser = await db.createuser(updata.name, hash, updata.email);
+        if(await createdUser) {
+            res.status(200).json({message: "User created successfully", user: createdUser});
         }
         else {
-            throw "Insert failed";
+            res.status(500).json({message: "We couldn't create that user."});
         }
-
     }
     catch (err) {
-        console.log("error at catch")
+        console.log(err);
         res.status(500).json({ error: err });
     }
 });
 
-route.get('/:userID', async function(req,res){
-    let user = await db.getuser(req.params.userID);
-    res.status(200).json(user)
-})
+route.get('/', async function(req,res) {
+    let updata = req.body;
+    let user = null;
+    try {
+        user = await db.getuser(updata.name);
+        if(await user) {
+            await res.status(200).json({message: "User obtained", user: user});
+        }
+        else {
+            res.status(500).json({message: "We couldn't find that user."})
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
+});
+
+route.delete('/delete', async function (req, res) {
+   let updata = req.body;
+   try {
+       let deletedUser = await db.deleteuser(updata.name);
+       await res.status(200).json({message: "User successfully deleted", user: deletedUser});
+   }
+   catch(err) {
+       console.log(err);
+       res.status(500).json({error: err});
+   }
+});
+
+route.delete('/wipe', async function(req,res) {
+    try {
+        let deletion = await db.deleteall();
+        if(await deletion) {
+            res.status(200).json({message: "Users table cleared."});
+        }
+        else {
+            res.status(500).json({message: "Could not clear users table."})
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
+});
+
+
+//TEMP ARRAY
+const database = [];
+
+route.post('/login', async function (req, res) {
+    let reqinfo = req.body;
+    let user = database.find(user => user.name === reqinfo.name);
+    //let user = await db.getuser(reqinfo.name);
+
+    if(user) {
+        let pw = user.password;
+        if (pw === reqinfo.password) {
+            //create a token
+            res.status(200).json({message:"you're logged in", token:check});
+        }
+        else {
+            res.status(403).json({message:"not the right password"});
+        }
+    }
+    else{
+        res.status(400).json({message: "user does not exist"});
+    }
+    // test if user exists
+    // test if password is correct
+
+
+});
 
 
 

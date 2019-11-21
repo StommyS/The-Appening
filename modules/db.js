@@ -1,40 +1,68 @@
 const pg = require("pg");
-const db = function(dbConnectionString){
+
+const db = function(dconnectionString) {
+    const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
-        const client = new pg.Client(dbConnectionString)
-        await client.connect() // Did I connect? throw an error??
-        const res = await client.query(query, params)
-        let respons = res.rows; // Did we get anything?? Dont care. SEP
-        await client.end()
-        return respons
+        await pool.connect(); // Did I connect? throw an error??
+        const res = await pool.query(query, params);
+        let response = res.rows; // Did we get anything?? Dont care. SEP
+        return response;
     }
 
-    const getUserByID = async function(userID){
-        userData = null
+    const createUser = async function(name,pwhash, email){
+        let userData = null;
         try {
-             userData =  await runQuery('SELECT * FROM users where userID=$1',[userID])
+            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email") VALUES(DEFAULT, $1, $2, $3) RETURNING *',[name,pwhash, email]);
+            return await userData;
         } catch (error) {
-            // Deal with error??
+            // expected failure points: user already exists, no data sent, no database available.
+            return userData;
         }
-        return userData;
-    }
+    };
 
-    const createUser = async function(){
-        userData = null
+    const getUser = async function(name) {
+        let userData = null;
         try {
-             userData =  await runQuery('INSERT INTO user (id, name, pwHash) VALUES(DEFAULT, $1, $2) RETURNING *',[userID])
+            userData =  await runQuery('SELECT * FROM public."user" WHERE "user" = $1', [name]);
+            return await userData;
         } catch (error) {
-            // Deal with error??
+            // expected failure points: no such user, no data sent, no database
+            console.log(error);
+            return userData;
         }
-        return userData;
-    }
+    };
+
+    const deleteUser = async function(name) {
+        let userData = null;
+        try {
+            userData =  await runQuery('DELETE FROM public."user" WHERE "user" = $1 RETURNING *',[name]);
+            return await userData;
+        } catch (error) {
+            // expected failure points: no such user, no data sent, no database
+            console.log(error);
+            return userData;
+        }
+    };
+
+    const clearDB = async function() {
+        try {
+            await runQuery('DELETE FROM "user" RETURNING *');
+            return await true;
+        } catch (error) {
+            console.log("major error!");
+            console.log(error);
+            return false;
+        }
+    };
+
 
     return {
         createuser : createUser,
-        getuser : getUserByID
+        deleteuser : deleteUser,
+        deleteall : clearDB,
+        getuser : getUser
     }
-}
-
+};
 
 module.exports = db;
