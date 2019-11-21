@@ -45,6 +45,32 @@ const db = function(dconnectionString) {
         }
     };
 
+    const updateUser = async function(newname, oldname) {
+        let userData = null;
+        try {
+            try {
+                userData = await getUser(oldname);
+                if(await userData) {
+                    console.log("got user all right");
+                    console.log(`new name: ${newname}`);
+                    let id = userData.id;
+                    console.log(id);
+                    userData = await runQuery('UPDATE public."user" SET username = $1::name WHERE id = $2 RETURNING *', [`'${newname}'`,id]);
+                    return await userData;
+                }
+            }
+            catch (error) {
+                console.log("fetchin old user failed");
+                console.log(error);
+                return userData;
+            }
+        }catch (error) {
+            console.log("is this the failing one?");
+            console.log(error);
+            return userData;
+        }
+    };
+
     const clearDB = async function() {
         try {
             await runQuery('DELETE FROM "user" RETURNING *');
@@ -61,7 +87,8 @@ const db = function(dconnectionString) {
         createuser : createUser,
         deleteuser : deleteUser,
         deleteall : clearDB,
-        getuser : getUser
+        getuser : getUser,
+        updateuser : updateUser
     }
 };
 

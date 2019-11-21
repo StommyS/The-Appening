@@ -62,6 +62,25 @@ route.delete('/delete', async function (req, res) {
    }
 });
 
+route.put('/update', async function (req, res) {
+    let updata = req.body;
+    try {
+        console.log(updata.newname);
+        let newname = updata.newname;
+        let updatedUser = await db.updateuser(newname, updata.name);
+        if (await updatedUser) {
+            res.status(200).json({message: "User successfully updated.", user: updatedUser});
+        }
+        else{
+            res.status(500).json({message: "Database error"});
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({message: "Database malfunction", error: err});
+    }
+});
+
 route.delete('/wipe', async function(req,res) {
     try {
         let deletion = await db.deleteall();
