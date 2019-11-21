@@ -11,37 +11,42 @@
 <script>
     let presentation;
     const container = document.getElementById('container');
+
     //add event listeners
     container.addEventListener('click', nextSlide);
     // button presses
     window.addEventListener("keydown", keyPress);
+
     window.onload = init();
     function init() {
         presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
-        //temporary presentation
-        /*
-        presentation = {
-            id: undefined,
-            title: "ye olde presentatione",
-            theme: "cooltheme",
-            slides: [`htmltext`,"htmltextalso","htmltextbutnotreally"]
-        };
-        */
+
+        if (!presentation) {
+            presentation = {
+                id: undefined,
+                title: "ye olde presentatione",
+                theme: "cooltheme",
+                slides: [`htmltext`, "htmltextalso", "htmltextbutnotreally"]
+            };
+        }
         container.innerHTML = presentation.slides[0];
-        console.log(presentation)
+
     }
+
     let currSlide = 0;
+
+
     function nextSlide() {
         currSlide++;
         if(presentation.slides[currSlide]) {
             container.innerHTML = "";
             container.innerHTML = presentation.slides[currSlide];
-            console.log(presentation.slides[currSlide])
         }else {
             container.innerHTML = "PRESENTATION OVER NOTHING TO SEE HERE";
             window.location.href = `editMode.html`;
         }
     }
+
     function prevSlide() {
         currSlide--;
         if(presentation.slides[currSlide]) {
@@ -55,6 +60,7 @@
         alert("LEAVING PRESENTATION");
         window.location.href = `editMode.html`;
     }
+
     function keyPress(evt) {
         console.log(evt);
         let key = evt.keyCode;

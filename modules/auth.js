@@ -1,4 +1,5 @@
 const check = require('./token.js');
+
 const authenticate = function (req, res, next) {
     let token = req.headers['authorization'];
 
