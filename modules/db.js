@@ -24,7 +24,7 @@ const db = function(dconnectionString) {
     const getUser = async function(name) {
         let userData = null;
         try {
-            userData =  await runQuery('SELECT * FROM public."user" WHERE "user" = $1', [name]);
+            userData =  await runQuery('SELECT * FROM public."user" WHERE "username" = $1', [name]);
             return await userData;
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
@@ -36,7 +36,7 @@ const db = function(dconnectionString) {
     const deleteUser = async function(name) {
         let userData = null;
         try {
-            userData =  await runQuery('DELETE FROM public."user" WHERE "user" = $1 RETURNING *',[name]);
+            userData =  await runQuery('DELETE FROM public."user" WHERE "username" = $1 RETURNING *',[name]);
             return await userData;
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
@@ -47,23 +47,16 @@ const db = function(dconnectionString) {
 
     const updateUser = async function(newname, oldname) {
         let userData = null;
+
         try {
-            try {
-                userData = await getUser(oldname);
-                if(await userData) {
-                    console.log("got user all right");
-                    console.log(`new name: ${newname}`);
-                    let id = userData.id;
-                    console.log(id);
-                    userData = await runQuery('UPDATE public."user" SET username = $1::name WHERE id = $2 RETURNING *', [`'${newname}'`,id]);
-                    return await userData;
-                }
+            userData = await getUser(oldname);
+
+            if(userData) {
+                let id = userData[0].id;
+
+                return await runQuery('UPDATE public."user" SET username = $1 WHERE id = $2 RETURNING *', [newname,id]);
             }
-            catch (error) {
-                console.log("fetchin old user failed");
-                console.log(error);
-                return userData;
-            }
+
         }catch (error) {
             console.log("is this the failing one?");
             console.log(error);

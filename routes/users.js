@@ -65,7 +65,6 @@ route.delete('/delete', async function (req, res) {
 route.put('/update', async function (req, res) {
     let updata = req.body;
     try {
-        console.log(updata.newname);
         let newname = updata.newname;
         let updatedUser = await db.updateuser(newname, updata.name);
         if (await updatedUser) {
