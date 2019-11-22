@@ -52,8 +52,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 
 <script>
@@ -101,9 +99,8 @@
                 theme: "BW",
                 slides: [titleSlideTemp]
             };
-        }
+        } else{presentation.slides.splice(0, 1);}
         cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
-        presentation.slides.splice(0, 1);
         changeCurrentSlide(presentation.slides[0]);
         loadSlides();
         console.log("on init, the presentation contains: " + presentation.slides);
@@ -116,10 +113,10 @@
         while (slideList.firstChild) {
             slideList.removeChild(slideList.firstChild);
         }
-
+        //presentation.slides.pop();
         for (let i = 0; i < presentation.slides.length; i++) {
-            if(presentation.slides[i] === "undefined"){
-                presentation.slides.splice(0, 1);
+            if(presentation.slides[i] === undefined){
+                presentation.slides.splice(i, 1);
             }
             let slideDiv = document.createElement("div");
             slideDiv.innerHTML = presentation.slides[i];
@@ -148,6 +145,7 @@
     }
 
     function createNewSlide(typeOfSlide){
+        presentation.slides.splice(0, 1);
         //save current slide
         presentation.slides.push(slidePreviewDiv.innerHTML)
         //-----load all slides-----
@@ -222,6 +220,7 @@
 
     btnPresentations.addEventListener('click', async function (evt) {
         console.log("Presentations");
+        presentation = null;
         window.localStorage.removeItem('presentation');
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
         window.location.href = `presList.html`
