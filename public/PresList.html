@@ -39,6 +39,8 @@
         try {
             let username = localStorage.getItem("loggedin");
             welcome.innerHTML = `Logged in as ${username}`;
+            let presentation = JSON.parse(window.localStorage.getItem('presentation'));
+
         }
         catch(error) {
             console.log(error);
