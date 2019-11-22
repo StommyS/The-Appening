@@ -13,12 +13,9 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email", "salt") VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *',[name, pwhash, email, salt]);
-            console.log("creating user");
             return await userData[0];
         } catch (error) {
             // expected failure points: user already exists, no data sent, no database available.
-            console.log(salt);
-            console.log("failed");
             console.log(error);
             return userData;
         }
