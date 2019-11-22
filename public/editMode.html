@@ -55,6 +55,8 @@
 </body>
 
 <script>
+    let atSlide = 0;
+
     //------------button Variables-----------
     let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
     let btnNewImageSlide = document.getElementById('btnNewImageSlide');
@@ -75,15 +77,15 @@
     let slidePreview = document.getElementById('slidePreview');
     let slidePreviewDiv = document.getElementById('slidePreviewDiv');
     let presentation;
-    let titleSlideTemp = `<h1 style="overflow:scroll;">Title</h1>`;
-    let imageSlideTemp = `<h2 style="overflow:scroll;">Image Text</h2>
+    let titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
+    let imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
                     <div>
                         <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg">
                     </div>`;
     let textSlideTemp = `
-        <h2 style="overflow:scroll;">List title</h2>
-        <ul style="overflow:scroll;">
-            <li style="overflow:scroll;">List</li>
+        <h2 style="overflow:hidden;">List title</h2>
+        <ul style="overflow:hidden;">
+            <li>List</li>
         </ul>`;
 
     //-------------init-------------
@@ -99,9 +101,9 @@
                 theme: "BW",
                 slides: [titleSlideTemp]
             };
-        } else{presentation.slides.splice(0, 1);}
+        }
         cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
-        changeCurrentSlide(presentation.slides[0]);
+        changeCurrentSlide(presentation.slides[atSlide]);
         loadSlides();
         console.log("on init, the presentation contains: " + presentation.slides);
     }
@@ -122,8 +124,8 @@
             slideDiv.innerHTML = presentation.slides[i];
 
             slideDiv.addEventListener("click", function () {
-                changeCurrentSlide(presentation.slides[i]);
-            })
+                changeCurrentSlide(presentation.slides[i], i);
+            });
             slideDiv.setAttribute("id", `slideDiv${i}`);
             slideDiv.setAttribute("contenteditable", `false`);
             slideDiv.setAttribute("class", `slidePreviewDivSmall`);
@@ -133,10 +135,11 @@
 
     //------------------------------------------------------------
 
-    function changeCurrentSlide(newSlideTypeHTML) {
+    function changeCurrentSlide(newSlideTypeHTML, slideID) {
         while (slidePreview.firstChild) {
             slidePreview.removeChild(slidePreview.firstChild);
         }
+        atSlide = slideID;
         slidePreviewDiv.innerHTML = newSlideTypeHTML;
         slidePreviewDiv.setAttribute("contenteditable", `true`);
         slidePreviewDiv.setAttribute("class", `slidePreviewDiv`);
@@ -145,13 +148,12 @@
     }
 
     function createNewSlide(typeOfSlide){
-        presentation.slides.splice(0, 1);
         //save current slide
-        presentation.slides.push(slidePreviewDiv.innerHTML)
-        //-----load all slides-----
-        loadSlides()
-        //change that slide to a Image slide
+        presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
+        atSlide++;
         changeCurrentSlide(typeOfSlide);
+        presentation.slides.push(slidePreviewDiv.innerHTML);
+        loadSlides();
     }
 
     //------------------------------buttons----------------------------------
