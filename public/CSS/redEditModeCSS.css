@@ -1,0 +1,27 @@
+.slidePreviewDiv{
+    background-color: red;
+}
+
+.slidePreviewDivSmall{
+    background-color: red;
+}
+
+.slidePreviewDivSmall h1{
+    color: rgb(151, 4, 4);
+}
+
+.slidePreviewDivSmall h2{
+    color: rgb(151, 4, 4);
+}
+
+.specialDivForThemes h1{
+    color: black;
+}
+
+ h1{
+     color: rgb(151, 4, 4);
+ }
+
+ h2{
+    color: rgb(151, 4, 4);
+ }
