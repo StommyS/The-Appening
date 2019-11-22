@@ -24,9 +24,47 @@
     let pw = document.getElementById('Pw');
     let btnLogin = document.getElementById('btnLogin');
     let result = document.getElementById('result');
+
+    window.addEventListener('keydown', async function(evt) {
+        if(evt.keyCode === 13) {
+            login();
+        }
+    });
+
     btnLogin.addEventListener('click', async function(evt) {
-        
-    });   
+        login();
+    });
+
+    async function login() {
+        let username = user.value;
+        let password = pw.value;
+
+        if(username && password) {
+            let baseurl = "http://localhost:3000/users";
+            let updata = {
+                name: username,
+                password: password
+            };
+
+            let cfg= {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify(updata)
+            };
+
+            let resp = await fetch(`${baseurl}/login`, cfg);
+            let data = await resp.json();
+            if(resp.ok) {
+                console.log(data);
+                localStorage.setItem(`logintoken`, data.token);
+                localStorage.setItem(`loggedin`, data.username);
+                localStorage.setItem(`loggedID`, data.userid);
+                window.location.href = `PresList.html`;
+            }
+            console.log(resp);
+            console.log(data);
+        }
+    }
 </script>
 
 </html>
