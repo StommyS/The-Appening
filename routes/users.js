@@ -2,6 +2,7 @@ const express = require("express");
 const route = express.Router();
 
 const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
 
 const secrets = require('../secret.js');
 const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
@@ -36,7 +37,7 @@ route.post('/create', async function (req, res) {
     }
 });
 
-route.get('/', async function(req,res) {
+route.get('/', authenticate, async function(req,res) {
     let updata = req.body;
     let user = null;
     try {
@@ -54,11 +55,11 @@ route.get('/', async function(req,res) {
     }
 });
 
-route.delete('/delete', async function (req, res) {
+route.delete('/delete', authenticate, async function (req, res) {
    let updata = req.body;
    try {
        let deletedUser = await db.deleteuser(updata.name);
-       await res.status(200).json({message: "User successfully deleted", user: deletedUser});
+       await res.status(200).json({message: "User successfully deleted", username: deletedUser.name, email: deletedUser.email});
    }
    catch(err) {
        console.log(err);
@@ -66,13 +67,13 @@ route.delete('/delete', async function (req, res) {
    }
 });
 
-route.put('/update', async function (req, res) {
+route.put('/update', authenticate, async function (req, res) {
     let updata = req.body;
     try {
         let newname = updata.newname;
         let updatedUser = await db.updateuser(newname, updata.name);
         if (await updatedUser) {
-            res.status(200).json({message: "User successfully updated.", user: updatedUser});
+            res.status(200).json({message: "User successfully updated.", username: updatedUser, oldusername: updata.name, email:updatedUser.email});
         }
         else{
             res.status(500).json({message: "Database error"});
@@ -96,11 +97,14 @@ route.post('/login', async function(req, res) {
            const pwcompare = hash.digest('hex');
 
            if(pwcompare === dbuser.password) {
-               res.status(200).json({message: "logged in and all ok"});
+               let payload = { userid: dbuser.id };
+               let tok = jwt.sign(payload, secrets.token, { expiresIn: "2h" }); //create token
+               console.log(tok);
+               res.status(200).json({ email: dbuser.email, userid: dbuser.id, token: tok });
            }
-           else res.status(403).json({message: "wrong password"});
+           else res.status(403).json({message: "wrong password"}).end();
        }
-       else res.status(403).json({message: "no such user I guess"});
+       else res.status(403).json({message: "no such user I guess"}).end();
    }
    catch(err) {
        console.log(err);
@@ -108,7 +112,7 @@ route.post('/login', async function(req, res) {
    }
 });
 
-route.delete('/wipe', async function(req,res) {
+route.delete('/wipe', authenticate, async function(req,res) {
     try {
         let deletion = await db.deleteall();
         if(await deletion) {
