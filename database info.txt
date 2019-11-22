@@ -1,17 +1,26 @@
-user/
-Id(automatisk, så her blir det sendt DEFAULT info)
-user(name) må sendes(har blitt gjort unik)
-pwHash(text) må sendes, text grunnet jeg ikke vet hvordan hashen vil se ut, og dette burde være bra nok for å lagre temmelig mye info.
+En oversikt over databasen
 
-presentation/
-pId(automatisk, send default)
-title, text(må sendes)
-fk_user_id(gjøres automatisk)
+Table user
+id - PK uni(automatisk vekst)
+username - uni
+password
+email
 
-slide/
-sId(automatisk, send default)
-type text
-text text[]
-image text[]
-style[]
-fk_presentation_pId(gjøres automatisk)
+tabellene er koblet cascading(forandring i user Table vil påvirke presentation Table)
+
+Table presentation
+pId - PK uni(automatisk vekst)
+slide
+user_id FK
+
+
+
+Avsluttet, men ikke slettet database table:
+
+Table slide
+sId - PK uni(automatisk vekst)
+type
+text
+image
+style
+presentation_pId FK

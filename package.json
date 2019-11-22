@@ -1,0 +1,21 @@
+{
+  "name": "the-appening",
+  "version": "1.0.0",
+  "description": "server",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Tommy",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "pg": "^7.12.1"
+  }
+}

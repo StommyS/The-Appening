@@ -1,0 +1,12 @@
+/test/nocipher.js
+/test/cryptotest.js
+hidden.js
+constToHelp.js
+package-lock.json
+/node_modules/
+/modules/js/
+/modules/test/
+/public/test/
+testR.txt
+secret.js
+/modules/token.js
