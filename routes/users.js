@@ -1,10 +1,10 @@
 const express = require("express");
 const route = express.Router();
 
-//const secrets = require('../secret.js');
-//const dbURI = secrets.dbURI;
-//const dbConnection  = process.env.DATABASE_URL || dbURI;
-//const db = require("../modules/db")(dbConnection);
+const secrets = require('../secret.js');
+const dbURI = secrets.dbURI;
+const dbConnection  = process.env.DATABASE_URL || dbURI;
+const db = require("../modules/db")(dbConnection);
 
 const authenticate = require('../modules/auth.js');
 

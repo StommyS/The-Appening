@@ -55,6 +55,42 @@ route.post('/', async function (req, res) {
     }
 });
 
+route.post('/', async function (req, res) {
+    let updata = req.body;
+
+    try {
+        let updatedPresentation = await db.updatepresentation(updata.title);
+        if(await updatedPresentation) {
+            res.status(200).json({message: "Presentation updated successfully"});
+        } else {
+            res.status(500).json({message: "Couldn't update presentation!"});
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err });
+    }
+});
+
+route.get('/', async function(req,res) {
+    let updata = req.body;
+    let presentation = null; 
+
+    try {
+        presentation= await db.getpresentation(updata.slide);
+        if(await presentation) {
+            await res.status(200).json({message: "Presentation found"});
+        }
+        else {
+            res.status(500).json({message: "No presentations!"})//or nothing, or connection issues
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
+});
+
 route.delete('/', async function (req, res) {
     let updata = req.body;
     
