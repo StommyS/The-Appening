@@ -4,19 +4,22 @@ const db = function(dconnectionString) {
     const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
-        await pool.connect(); // Did I connect? throw an error??
         const res = await pool.query(query, params);
         let response = res.rows; // Did we get anything?? Dont care. SEP
         return response;
     }
 
-    const createUser = async function(name,pwhash, email){
+    const createUser = async function(name,pwhash, email, salt){
         let userData = null;
         try {
-            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email") VALUES(DEFAULT, $1, $2, $3) RETURNING *',[name,pwhash, email]);
-            return await userData;
+            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email", "salt") VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *',[name, pwhash, email, salt]);
+            console.log("creating user");
+            return await userData[0];
         } catch (error) {
             // expected failure points: user already exists, no data sent, no database available.
+            console.log(salt);
+            console.log("failed");
+            console.log(error);
             return userData;
         }
     };
@@ -25,7 +28,7 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('SELECT * FROM public."user" WHERE "username" = $1', [name]);
-            return await userData;
+            return await userData[0];
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
             console.log(error);
@@ -37,7 +40,7 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('DELETE FROM public."user" WHERE "username" = $1 RETURNING *',[name]);
-            return await userData;
+            return await userData[0];
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
             console.log(error);
@@ -54,7 +57,8 @@ const db = function(dconnectionString) {
             if(userData) {
                 let id = userData[0].id;
 
-                return await runQuery('UPDATE public."user" SET username = $1 WHERE id = $2 RETURNING *', [newname,id]);
+                let updated =  await runQuery('UPDATE public."user" SET username = $1 WHERE id = $2 RETURNING *', [newname,id]);
+                return await updated[0];
             }
 
         }catch (error) {

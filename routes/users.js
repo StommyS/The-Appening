@@ -1,7 +1,10 @@
 const express = require("express");
 const route = express.Router();
 
+const crypto = require("crypto");
+
 const secrets = require('../secret.js');
+const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
 const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("../modules/db")(dbConnection);
@@ -13,14 +16,15 @@ const authenticate = require('../modules/auth.js');
 route.post('/create', async function (req, res) {
     let updata = req.body;
 
-    /// TODO Hashing
-    //hashing the password before it is stored in the DB
-    let hash = updata.password + 12345;
+    const salt = crypto.randomBytes(32).toString('hex');
+    const hash = crypto.createHmac('sha256', salt);
+    hash.update(updata.password);
+    const hashedpw = hash.digest('hex');
 
     try {
-        let createdUser = await db.createuser(updata.name, hash, updata.email);
+        let createdUser = await db.createuser(updata.name, hashedpw, updata.email, salt);
         if(await createdUser) {
-            res.status(200).json({message: "User created successfully", user: createdUser});
+            res.status(200).json({message: "User created successfully", username: createdUser.username, email: createdUser.email});
         }
         else {
             res.status(500).json({message: "We couldn't create that user."});
@@ -38,7 +42,7 @@ route.get('/', async function(req,res) {
     try {
         user = await db.getuser(updata.name);
         if(await user) {
-            await res.status(200).json({message: "User obtained", user: user});
+            await res.status(200).json({message: "User obtained", username: user.username, email: user.email});
         }
         else {
             res.status(500).json({message: "We couldn't find that user."})
@@ -80,6 +84,30 @@ route.put('/update', async function (req, res) {
     }
 });
 
+route.post('/login', async function(req, res) {
+   let updata = req.body;
+   try {
+       let dbuser = await db.getuser(updata.name);
+       if(await dbuser) {
+
+           const salt = dbuser.salt;
+           const hash = crypto.createHmac('sha256', salt);
+           hash.update(updata.password);
+           const pwcompare = hash.digest('hex');
+
+           if(pwcompare === dbuser.password) {
+               res.status(200).json({message: "logged in and all ok"});
+           }
+           else res.status(403).json({message: "wrong password"});
+       }
+       else res.status(403).json({message: "no such user I guess"});
+   }
+   catch(err) {
+       console.log(err);
+       res.status(500).json({message: "Something went wrong :c"}).end();
+   }
+});
+
 route.delete('/wipe', async function(req,res) {
     try {
         let deletion = await db.deleteall();
@@ -95,35 +123,6 @@ route.delete('/wipe', async function(req,res) {
         res.status(500).json({error: err});
     }
 });
-
-
-//TEMP ARRAY
-const database = [];
-
-route.post('/login', async function (req, res) {
-    let reqinfo = req.body;
-    let user = database.find(user => user.name === reqinfo.name);
-    //let user = await db.getuser(reqinfo.name);
-
-    if(user) {
-        let pw = user.password;
-        if (pw === reqinfo.password) {
-            //create a token
-            res.status(200).json({message:"you're logged in", token:check});
-        }
-        else {
-            res.status(403).json({message:"not the right password"});
-        }
-    }
-    else{
-        res.status(400).json({message: "user does not exist"});
-    }
-    // test if user exists
-    // test if password is correct
-
-
-});
-
 
 
 module.exports = route;
