@@ -99,12 +99,11 @@ route.post('/login', async function(req, res) {
            if(pwcompare === dbuser.password) {
                let payload = { userid: dbuser.id };
                let tok = jwt.sign(payload, secrets.token, { expiresIn: "2h" }); //create token
-               console.log(tok);
-               res.status(200).json({ email: dbuser.email, userid: dbuser.id, token: tok });
+               res.status(200).json({ email: dbuser.email, userid: dbuser.id, token: tok, username: dbuser.username});
            }
            else res.status(403).json({message: "wrong password"}).end();
        }
-       else res.status(403).json({message: "no such user I guess"}).end();
+       else res.status(500).json({message: "database connection failed OR no such user"}).end();
    }
    catch(err) {
        console.log(err);

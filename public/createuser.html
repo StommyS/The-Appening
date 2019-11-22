@@ -10,11 +10,11 @@
 
 <body>
     <h1>Wannabe-Powerpoint <br>on a sloppy day</h1>
-    <input type="text" id="User" placeholder="User">    
-    <br>
-    <input type="password" id="Pw" placeholder="Password">
+    <input type="text" id="User" placeholder="User">
     <br>
     <input type="email" id="email" placeholder="Email">
+    <br>
+    <input type="password" id="Pw" placeholder="Password">
     <br><br>
     <button id="btnCreate">Create user</button>
     <br>
@@ -24,24 +24,36 @@
 <script>
     let user = document.getElementById('User');    
     let pw = document.getElementById('Pw');
+    let email = document.getElementById('email');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
     btnCreate.addEventListener('click', async function(evt) {
-        let url = "http://localhost:3000/users";
+        /// TODO evaluate password security risks
+        let baseurl = "http://localhost:3000/users";
         let updata = {
-            user: user.value,
-            passwrd: pw.value            
-        }
+            name: user.value,
+            password: pw.value,
+            email: email.value
+        };
         
         let cfg = {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify(updata)
-        }
+        };
         try {
-            var resp = await fetch(url, cfg);
-            var data = await resp.json();
-            result.innerHTML = data.msg; 
+            let resp = await fetch(`${baseurl}/create`, cfg);
+            let data = await resp.json();
+            if(resp.ok) {
+                let login = await fetch(`${baseurl}/login`,cfg);
+                let logindata = await login.json();
+                localStorage.setItem(`logintoken`, logindata.token);
+                localStorage.setItem(`loggedin`, data.username);
+                localStorage.setItem(`loggedID`, data.userid);
+                window.location.href = `PresList.html`;
+            }
+            /// TODO prettier we failed message
+            result.innerHTML = data.message;
         }
         catch (err) {
             console.log(err);
