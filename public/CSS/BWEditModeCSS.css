@@ -1,8 +1,15 @@
+body{
+    background-color: white;
+}
+html{
+    background-color: white;
+}
 .UIDiv{
 width: auto;
 height: 600px;
 margin: 1px;
 padding: 5px;
+background-color: whitw;
 }
  
 .uiMenuDiv{
@@ -39,15 +46,23 @@ padding: 5px;
     text-align: center;
     width: auto;
     height: 150px;
-    font-size: 16;
     border-style: solid;
     border-width: 2px;
     background-color: white;
-    margin: 2px 2px 2px 2px;
+    margin: 3px 3px 3px 3px;
 }
 
+.slidePreviewDivSmall h1{
+    font-size: 30px;
+    color: black;
+}
 
-.slidePreviewDivSmall>img{
+.slidePreviewDivSmall h2{
+    font-size: 16px;
+    color: black;
+}
+
+.slidePreviewDivSmall img{
     width: auto;
     height: 100px;
 }
@@ -57,12 +72,7 @@ padding: 5px;
     grid-template-columns: 20% 80%;
 }
 
-.loggedInnClass{
-    margin: 1px;
-    margin-right: 17px;
-    margin-bottom: -15px;
-    text-align: right;
-}
+
 
 button{
     display: inline-block;
@@ -79,6 +89,13 @@ button{
     border-radius: 7px;
 }
 
+.loggedInnClass{
+    margin: 1px;
+    margin-right: 17px;
+   
+    text-align: right;
+}
+
 .button1{
     padding: 6px 40px;
 }
@@ -92,6 +109,12 @@ button{
     border-radius: 5px;
     background-color: lightgray; 
 }
+
+.specialDivForThemes h1{
+    font-size: 2em;
+    color: black;
+}
+
 .button2{
     padding: 15px 20px;
 }
@@ -108,7 +131,29 @@ body{
     width:1000px;
  }
 
+ h1{
+     font-size: 150px; 
+     color: black;
+ }
+
+ h2{
+    font-size: 60px; 
+    color: black;
+ }
+
  img{
      width: auto;
      height: 300px;
+ }
+
+ ul{
+     font-size: 40px;
+    margin: 10px 170px 10px 170px; 
+    text-align: left;
+ }
+
+.slidePreviewDivSmall ul{
+    font-size: 12px;
+    margin: 1px 17px 1px 17px; 
+    text-align: left;
  }
