@@ -157,3 +157,12 @@ body{
     margin: 1px 17px 1px 17px; 
     text-align: left;
  }
+
+ .deleteDivClass{
+    display: grid; 
+    grid-template-columns: 50% 50%;
+ }
+
+ .deleteButtonsClass{
+     width: 20%;
+ }
