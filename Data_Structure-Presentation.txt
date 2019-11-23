@@ -1,0 +1,27 @@
+----------------------------------
+-- Data Structure: Presentation --
+----------------------------------
+
+The structure for the presentation is composed of:
+
+-- Slides --
+The slides within the presentation and how many slides it consist of.
+
+
+-- filename(file) --
+Name of the file, can be enything, therefor it will not be used as an identifyer.
+
+
+-- File ID --
+An identifyer, that is specified for that excact file and is connected to the OWNER, this will prevent posibillity for someone to access someone elses files. 
+
+
+-- Owner --
+it will need some sort of  connection to the owner, might be redundent due to the file ID.
+
+
+-- public status(shared, unshared) --
+The presentation will need a public status, that states if the file is shared or not, and meybe WHO it will be shared with. 
+
+
+--

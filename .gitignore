@@ -1,12 +1,6 @@
-/test/nocipher.js
-/test/cryptotest.js
-hidden.js
-constToHelp.js
-package-lock.json
-/node_modules/
-/modules/js/
-/modules/test/
-/public/test/
-testR.txt
+.DS_Store
+node_modules/
+test.js
+token.js
 secret.js
-/modules/token.js
+Design_The_Appening.ai

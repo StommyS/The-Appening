@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <p id="loggedInnId" class="loggedInnClass">Logged inn as: USERNAME</p>
+    <p id="loggedInnId" class="loggedInnClass">Logged in as: USERNAME</p>
     <h1>Presentations:</h1>
     <div class="buttonDivClassDiv">
     <div id="buttonDiv" class="buttonDivClass">
@@ -31,7 +31,22 @@
 </body>
 
 <script>
+    let welcome = document.getElementById("loggedInnId");
+
+    window.onload = init();
+
+    async function init(){
+        try {
+            let username = localStorage.getItem("loggedin");
+            welcome.innerHTML = `Logged in as ${username}`;
+            let presentation = JSON.parse(window.localStorage.getItem('presentation'));
+
+        }
+        catch(error) {
+            console.log(error);
+            window.location.href = `index.html`;
+        }
+    }
     //code to get the presentations and push them in the DIV with a clickable button
 </script>
-
 </html>
