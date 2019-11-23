@@ -68,12 +68,12 @@ const db = function(dconnectionString) {
         }
     };
 
-    const createPresentation = async function(title, slide, userid) {
+    const createPresentation = async function(title, slide, userid, theme) {
         let presentationData = null;
 
         try {
-            presentationData = runQuery('INSERT INTO presentations ("title", "slide", "userid") VALUES($1, $2, $3) RETURNING *',[title, slide, userid]);
-            return await presentationData;
+            presentationData = await runQuery('INSERT INTO presentations ("title", "slide", "userid", "theme") VALUES($1, $2, $3, $4) RETURNING *',[title, slide, userid, theme]);
+            return await presentationData[0];
         } catch (error) {
             //we about to find out
             return await presentationData;
@@ -85,7 +85,7 @@ const db = function(dconnectionString) {
 
         try {
             presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "userid" = $1', [userid]);
-            return await presentationData;
+            return await presentationData[0];
         } catch (error) {
             // expected failure points: no connection, no such user
             return presentationData;
@@ -97,7 +97,7 @@ const db = function(dconnectionString) {
 
         try {
             presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1', [pId]);
-            return await presentationData;
+            return await presentationData[0];
         } catch (error) {
             //deal with error
             return await presentationData;
@@ -109,7 +109,7 @@ const db = function(dconnectionString) {
 
         try {
             presentationData = await runQuery('UPDATE public.presentations SET "title" = $1 WHERE "pId" = $2 RETURNING *',[title, pId]);
-            return await presentationData;
+            return await presentationData[0];
         } catch (error) {
             //deal with error
             return await presentationData;
@@ -121,7 +121,7 @@ const db = function(dconnectionString) {
 
         try {
             presentationData = await runQuery('UPDATE public.presentations SET "slide" = $1 WHERE "pId" = $2 RETURNING *',[slide, pId]);
-            return await presentationData;
+            return await presentationData[0];
         } catch (error) {
             //deal with error
             return await presentationData;

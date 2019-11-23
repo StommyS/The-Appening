@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <title>PRESENTATION TITLE</title>
     <link href="./CSS/presModeCSS.css" rel="stylesheet">
-    <link id="cssLinkID" href="./CSS/BWEditModeCSS.css" rel="stylesheet">
+    <link id="cssLinkID" href="" rel="stylesheet">
 </head>
 <body>
 <button id="startPresID">Start presentation</button>
-<div style="background-color: white; width: 100%; height: 100%;">
-        <div id="container"></div>
-</div>
+<div id="container" class="slidePreviewDiv" style="width: 100%;"></div>
+
 
 </body>
 <script>
@@ -22,14 +21,13 @@
     window.addEventListener("keydown", keyPress);
 
     startPres.addEventListener('click', async function (evt) {
-    if(document.fullscreenElement) {
+        if(container.fullscreenElement) {
       container.exitFullscreen();
     } else {
       container.requestFullscreen();
     }
     init();
     });
-
   
     function init() {
         let logintoken = localStorage.getItem(`logintoken`);
@@ -53,6 +51,12 @@
                     <li>Cute</li><li>A good cat</li><li>Adorable</li><li>White (not racist I SWEAR!)<br></li><li>An ASSASSIN</li><li>BOO!<br></li>
                 </ul>`]
                 };
+            }
+            let cssLinkID = document.getElementById('cssLinkID');
+            if(presentation.theme === "BW"){
+                cssLinkID.setAttribute("href", `./CSS/presModeCSS.css`);
+            }else{
+                cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
             }
             container.innerHTML = presentation.slides[0];
         }

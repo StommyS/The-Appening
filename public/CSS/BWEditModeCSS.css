@@ -147,7 +147,8 @@ body{
  }
 
  ul{
-     font-size: 40px;
+    color: black;
+    font-size: 40px;
     margin: 10px 170px 10px 170px; 
     text-align: left;
  }
