@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDIT MODE</title>
+    <link href="./CSS/BWEditModeCSS.css" rel="stylesheet">
+    <link id="cssLinkID" href="./CSS/BWEditModeCSS.css" rel="stylesheet">
+</head>
+
+<body>
+    <p id="loggedInId" class="loggedInnClass">Logged in as USERNAME</p>
+    <div id="UI" class="UIDiv">
+        <div id="uiMenu" class="uiMenuDiv">
+            <div>
+                <button id="btnNewTitleSlide" class="button1">New Title Slide</button>
+                <br>
+                <button id="btnNewImageSlide" class="button1">New Image Slide</button>
+                <br>
+                <button id="btnNewTextSlide" class="button1">New Text Slide</button>
+            </div>
+            <div class="specialDivForThemes">
+                <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
+                <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
+                <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
+                <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
+                <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
+                <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
+            </div>
+            <div>
+                <button id="btnSave" class="button3">Save</button>
+                <br>
+                <button id="btnPresentations" class="button3">Presentations</button>
+                <br>
+                <button id="btnCreateNewPresentation" class="button3">Create New Presentation</button>
+            </div>
+            <div>
+                <button id="btnPresentationMode" class="button4"
+                    style="padding-top: 29px; padding-bottom: 29px;">Presentation Mode</button>
+                <br>
+                <button id="btnSignOut" class="button4">Sign out</button>
+            </div>
+        </div>
+        <div class="grid">
+            <div id="slideList" class="slideListDiv" style="overflow:scroll;">
+            </div>
+            <div id="slidePreview">
+                <div id="slidePreviewDiv" class="slidePreviewDiv" style="text-align: center; overflow:scroll;"
+                    contenteditable="true">
+
+                </div>
+            </div>
+        </div>
+        <div class="deleteDivClass">
+            <button id="btnDeletePres" class="deleteButtonsClass">Delete presentation</button>
+            <button id="btnDeleteSlide" class="deleteButtonsClass">Delete slide</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    let atSlide = 0;
+    //------------button Variables-----------
+    let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
+    let btnNewImageSlide = document.getElementById('btnNewImageSlide');
+    let btnNewTextSlide = document.getElementById('btnNewTextSlide');
+    let btnOrangeTheme = document.getElementById('btnOrangeTheme');
+    let btnBWTheme = document.getElementById('btnBWTheme');
+    let btnGreenTheme = document.getElementById('btnGreenTheme');
+    let btnBlueTheme = document.getElementById('btnBlueTheme');
+    let btnRedTheme = document.getElementById('btnRedTheme');
+    let btnSave = document.getElementById('btnSave');
+    let btnPresentations = document.getElementById('btnPresentations');
+    let btnCreateNewPresentation = document.getElementById('btnCreateNewPresentation');
+    let btnPresentationMode = document.getElementById('btnPresentationMode');
+    let btnSignOut = document.getElementById('btnSignOut');
+    let welcomeBanner = document.getElementById('loggedInId');
+    let btnDeletePres = document.getElementById('btnDeletePres');
+    let btnDeleteSlide = document.getElementById('btnDeleteSlide');
+
+    //--------------Other variables--------------
+    let slideList = document.getElementById('slideList');
+    let slidePreview = document.getElementById('slidePreview');
+    let slidePreviewDiv = document.getElementById('slidePreviewDiv');
+    let presentation;
+    let titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
+    let imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
+                    <div>
+                        <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg">
+                    </div>`;
+    let textSlideTemp = `
+        <h2 style="overflow:hidden;">List title</h2>
+        <ul style="overflow:hidden;">
+            <li>List</li>
+        </ul>`;
+    //-------------init-------------
+    window.onload = init();
+    function init() {
+        let logintoken = localStorage.getItem(`logintoken`);
+        let loginuser = localStorage.getItem(`loggedin`);
+        let loginid = localStorage.getItem(`loggedID`);
+
+        if(logintoken && loginuser){
+            welcomeuser(loginuser);
+            presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            console.log("did we get localstorage?");
+            if (!presentation) {
+                console.log("no...");
+                presentation = {
+                    id: undefined,
+                    title: "Ye Olde Presentatione",
+                    theme: "BW",
+                    slides: [titleSlideTemp]
+                };
+            }
+            cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
+            changeCurrentSlide(presentation.slides[atSlide], atSlide);
+            loadSlides();
+            console.log("on init, the presentation contains: " + presentation.slides);
+        }
+        else {
+            window.location.href = `index.html`;
+        }
+    }
+
+    //---------loading slides in the presentation-------------
+    async function loadSlides() {
+        //removing all childs
+        while (slideList.firstChild) {
+            slideList.removeChild(slideList.firstChild);
+        }
+        //presentation.slides.pop();
+        for (let i = 0; i < presentation.slides.length; i++) {
+            if (presentation.slides[i] === undefined) {
+                presentation.slides.splice(i, 1);
+            }
+            let slideDiv = document.createElement("div");
+            slideDiv.innerHTML = presentation.slides[i];
+            slideDiv.addEventListener("click", function () {
+                presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
+                changeCurrentSlide(presentation.slides[i], i);
+                loadSlides();
+            });
+            slideDiv.setAttribute("id", `slideDiv${i}`);
+            slideDiv.setAttribute("contenteditable", `false`);
+            slideDiv.setAttribute("class", `slidePreviewDivSmall`);
+            slideList.appendChild(slideDiv);
+        }
+        console.log("end of loadSLides: "+atSlide);
+    }
+    //------------------------------------------------------------
+    function changeCurrentSlide(newSlideTypeHTML, slideID) {
+        while (slidePreview.firstChild) {
+            slidePreview.removeChild(slidePreview.firstChild);
+        }
+        console.log(`slideid: `, slideID);
+        atSlide = slideID;
+        slidePreviewDiv.innerHTML = newSlideTypeHTML;
+        slidePreviewDiv.setAttribute("contenteditable", `true`);
+        slidePreviewDiv.setAttribute("class", `slidePreviewDiv`);
+        slidePreview.appendChild(slidePreviewDiv);
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+        console.log("end of changeCurrentSlide: " + atSlide);
+    }
+
+    function createNewSlide(typeOfSlide) {
+        //save current slide
+        presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
+        atSlide++;
+        changeCurrentSlide(typeOfSlide, atSlide);
+        presentation.slides.push(slidePreviewDiv.innerHTML);
+        loadSlides();
+        console.log("end of createNewSlide: "+atSlide);
+    }
+
+    function welcomeuser(name) {
+        welcomeBanner.innerHTML = `Logged in as ${name}`;
+    }
+
+    function deleteCurrentSlide(){
+        presentation.slides.splice(atSlide,1);
+        atSlide--
+        if(atSlide == -1){
+            atSlide++
+        }
+        if(presentation.slides.length == 0){
+        window.localStorage.removeItem('presentation');
+        window.location.href = `presList.html`
+        }
+        changeCurrentSlide(presentation.slides[atSlide], atSlide);
+        loadSlides();
+        console.log("end of deleteSlide: "+atSlide);
+    }
+
+    function savePresentation(){
+        presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
+        loadSlides();
+        window.localStorage.removeItem('presentation');
+        window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
+        console.log("on save, the presentation contains: " + presentation.slides);
+    }
+
+    //------------------------------buttons----------------------------------
+    btnNewTitleSlide.addEventListener('click', async function (evt) {
+        console.log("newTitle");
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+        createNewSlide(titleSlideTemp);
+        console.log("on new title, the presentation contains: " + presentation.slides);
+    });
+    btnNewImageSlide.addEventListener('click', async function (evt) {
+        console.log("newImage");
+        createNewSlide(imageSlideTemp);
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+        console.log("on new image, the presentation contains: " + presentation.slides);
+    });
+    btnNewTextSlide.addEventListener('click', async function (evt) {
+        console.log("newText");
+        createNewSlide(textSlideTemp);
+        slidePreviewDiv = document.getElementById('slidePreviewDiv');
+        console.log("on new text, the presentation contains: " + presentation.slides);
+    });
+    btnOrangeTheme.addEventListener('click', async function (evt) {
+        console.log("Orange");
+        presentation.theme = "orange";
+        let cssLinkID = document.getElementById('cssLinkID');
+        cssLinkID.setAttribute("href", `./CSS/orangeEditModeCSS.css`);
+    });
+    btnBWTheme.addEventListener('click', async function (evt) {
+        console.log("Black and White");
+        presentation.theme = "BW";
+        let cssLinkID = document.getElementById('cssLinkID');
+        cssLinkID.setAttribute("href", `./CSS/BWEditModeCSS.css`);
+    });
+    btnGreenTheme.addEventListener('click', async function (evt) {
+        console.log("Green");
+        presentation.theme = "green";
+        let cssLinkID = document.getElementById('cssLinkID');
+        cssLinkID.setAttribute("href", `./CSS/greenEditModeCSS.css`);
+    });
+    btnBlueTheme.addEventListener('click', async function (evt) {
+        console.log("Blue");
+        presentation.theme = "blue";
+        let cssLinkID = document.getElementById('cssLinkID');
+        cssLinkID.setAttribute("href", `./CSS/blueEditModeCSS.css`);
+    });
+    btnRedTheme.addEventListener('click', async function (evt) {
+        console.log("Red");
+        presentation.theme = "red";
+        let cssLinkID = document.getElementById('cssLinkID');
+        cssLinkID.setAttribute("href", `./CSS/redEditModeCSS.css`);
+    });
+    btnSave.addEventListener('click', async function (evt) {
+        console.log("Save");
+        savePresentation()
+    });
+    btnPresentations.addEventListener('click', async function (evt) {
+        console.log("Presentations");
+        presentation = null;
+        window.localStorage.removeItem('presentation');
+        window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
+        window.location.href = `presList.html`;
+        console.log("on presentation button, the presentation contains: " + presentation.slides);
+    });
+    btnCreateNewPresentation.addEventListener('click', async function (evt) {
+        console.log("Create New Presentation");
+        window.localStorage.removeItem('presentation');
+        init();
+        console.log("on create new presentation, the presentation contains: " + presentation.slides);
+    });
+    btnPresentationMode.addEventListener('click', async function (evt) {
+        savePresentation()
+        window.location.href = `presMode.html`
+        console.log("Presentation Mode");
+        console.log("on presentation mode, the presentation contains: " + presentation.slides);
+    });
+    btnSignOut.addEventListener('click', async function (evt) {
+        if (confirm("Do you want to save this presentation before signing out?")){
+            savePresentation()
+            console.log("presentation saved");
+        } else {
+            console.log("presentation NOT saved");
+        }
+        window.location.href = `index.html`
+        console.log("Sign Out");
+    });
+    btnDeletePres.addEventListener('click', async function (evt) {
+        console.log("Delete Pres");
+        if (confirm("Do you want to delete this presentation?")){
+            //delete presentation
+            console.log("presentation deleted");
+        } else {
+            // NOT delete presentation
+            console.log("presentation NOT deleted");
+        }
+    });
+
+    btnDeleteSlide.addEventListener('click', async function (evt) {
+        console.log("Delete Slide");
+        deleteCurrentSlide();
+    });
+
+
+    //-------------------------------------------------------------------------
+</script>
+</html>

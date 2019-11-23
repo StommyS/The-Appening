@@ -1,0 +1,37 @@
+.slidePreviewDiv{
+    text-align: center;
+    width: auto;
+    height: 500px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    margin: 10px 10px 10px 10px;
+}
+
+
+body{
+    min-width:1000px;
+    width: auto !important;  
+    width:1000px;
+ }
+
+ h1{
+     font-size: 150px; 
+     color: black;
+ }
+
+ h2{
+    font-size: 60px; 
+    color: black;
+ }
+
+ img{
+     width: auto;
+     height: 300px;
+ }
+
+ ul{
+     font-size: 40px;
+    margin: 10px 170px 10px 170px; 
+    text-align: left;
+ }

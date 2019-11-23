@@ -1,0 +1,168 @@
+body{
+    background-color: white;
+}
+html{
+    background-color: white;
+}
+.UIDiv{
+width: auto;
+height: 600px;
+margin: 1px;
+padding: 5px;
+background-color: whitw;
+}
+ 
+.uiMenuDiv{
+    display: grid;
+    grid-template-columns: 20% 40% 20% 20%;
+    width: 600;
+    height: auto;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    margin: 10px 10px 10px 10px;
+}
+
+.slideListDiv{
+    width: auto;
+    height: 500px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    margin: 10px 10px 10px 10px;
+}
+
+.slidePreviewDiv{
+    text-align: center;
+    width: auto;
+    height: 500px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    margin: 10px 10px 10px 10px;
+}
+
+.slidePreviewDivSmall{
+    text-align: center;
+    width: auto;
+    height: 150px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    margin: 3px 3px 3px 3px;
+}
+
+.slidePreviewDivSmall h1{
+    font-size: 30px;
+    color: black;
+}
+
+.slidePreviewDivSmall h2{
+    font-size: 16px;
+    color: black;
+}
+
+.slidePreviewDivSmall img{
+    width: auto;
+    height: 100px;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+
+
+
+button{
+    display: inline-block;
+    width: 95%;
+    margin: 6px 4px 4px 4px;
+    background-color: darkgray;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 3px;
+    border-color: gray;
+    border-radius: 7px;
+}
+
+.loggedInnClass{
+    margin: 1px;
+    margin-right: 17px;
+   
+    text-align: right;
+}
+
+.button1{
+    padding: 6px 40px;
+}
+.specialDivForThemes{
+    display: grid;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    grid-template-columns: 33.32% 33.32% 33.32%;
+    border-radius: 5px;
+    background-color: lightgray; 
+}
+
+.specialDivForThemes h1{
+    font-size: 2em;
+    color: black;
+}
+
+.button2{
+    padding: 15px 20px;
+}
+.button3{
+    padding: 6px 40px;
+}
+.button4{
+    padding: 6px 40px;
+}
+
+body{
+    min-width:1000px;
+    width: auto !important;  
+    width:1000px;
+ }
+
+ h1{
+     font-size: 150px; 
+     color: black;
+ }
+
+ h2{
+    font-size: 60px; 
+    color: black;
+ }
+
+ img{
+     width: auto;
+     height: 300px;
+ }
+
+ ul{
+     font-size: 40px;
+    margin: 10px 170px 10px 170px; 
+    text-align: left;
+ }
+
+.slidePreviewDivSmall ul{
+    font-size: 12px;
+    margin: 1px 17px 1px 17px; 
+    text-align: left;
+ }
+
+ .deleteDivClass{
+    display: grid; 
+    grid-template-columns: 50% 50%;
+ }
+
+ .deleteButtonsClass{
+     width: 20%;
+ }
