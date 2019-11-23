@@ -1,6 +1,10 @@
 const express = require("express");
 const route = express.Router();
 
+const secrets = require('../secret.js');
+const dbURI = secrets.dbURI;
+const dbConnection  = process.env.DATABASE_URL || dbURI;
+const db = require("../modules/db")(dbConnection);
 
 route.get("/:presentationID", function(req,res,next){
 
@@ -42,7 +46,7 @@ route.post('/', async function (req, res) {
     let updata = req.body;
 
     try {
-        let createdPresentation = await db.createpresentation(updata.title);
+        let createdPresentation = await db.createpresentation(updata.title, updata.slide);
         if(await createdPresentation) {
             res.status(200).json({message: "Presentation created successfully"});
         } else {
@@ -55,11 +59,13 @@ route.post('/', async function (req, res) {
     }
 });
 
-route.post('/', async function (req, res) {
+route.post('/update', async function (req, res) {
     let updata = req.body;
 
     try {
-        let updatedPresentation = await db.updatepresentation(updata.title);
+        let newpresentation = updata.newpresentation;
+        let newslide = updata.newslide;
+        let updatedPresentation = await db.updatepresentation(newpresentation, newslide, updata.title, updata.slide);
         if(await updatedPresentation) {
             res.status(200).json({message: "Presentation updated successfully"});
         } else {
@@ -77,7 +83,7 @@ route.get('/', async function(req,res) {
     let presentation = null; 
 
     try {
-        presentation= await db.getpresentation(updata.slide);
+        presentation= await db.getpresentation(updata.title);
         if(await presentation) {
             await res.status(200).json({message: "Presentation found"});
         }
