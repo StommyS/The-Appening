@@ -202,10 +202,15 @@
     }
 
     async function saveToWeb() {
+        console.log("saving to web");
         if(localStorage.getItem(`presentation`)) {
+            console.log("found presentation in localstorage");
+
             let baseurl = `http://localhost:3000/presentations`;
             let token = localStorage.getItem(`logintoken`);
+            let userid = localStorage.getItem(`loggedID`);
             if(presentation.id) {
+                console.log("presentation already has id");
                 let cfg = {
                     method: "PUT",
                     headers: {"Content-Type":"application/json",
@@ -213,19 +218,22 @@
                     body: JSON.stringify(presentation)
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
-                let data = await resp.json();
-                if(data.ok) {
+                if(resp.ok) {
                     alert("Presentation saved successfully.");
+                    return true;
                 }
                 else {
                     alert("We couldn't save your presentation.");
+                    return false;
                 }
             }
             else {
+                console.log("presentation has no id");
                 let updata = {
                     title: presentation.title,
                     theme: presentation.theme,
-                    slides: presentation.slides
+                    slides: presentation.slides,
+                    userid: userid
                 };
                 let cfg = {
                     method: "POST",
@@ -235,11 +243,15 @@
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
                 let data = await resp.json();
-                if(data.ok) {
+                if(resp.ok) {
+                    presentation.id = data.id;
+                    savePresLocal();
                     alert("Presentation saved successfully.");
+                    return true;
                 }
                 else {
                     alert("We couldn't save your presentation.");
+                    return false;
                 }
             }
         }
@@ -295,24 +307,53 @@
         cssLinkID.setAttribute("href", `./CSS/redEditModeCSS.css`);
     });
     btnSave.addEventListener('click', async function (evt) {
-        savePresLocal()
+        savePresLocal();
+        let saved = await saveToWeb();
+        if(saved) {
+            // popup success
+        }
+        else {
+            // popup failed to save try again
+        }
     });
     btnPresentations.addEventListener('click', async function (evt) {
         if(confirm("Do you want to save?")) {
             savePresLocal();
-            saveToWeb();
-            window.localStorage.removeItem('presentation');
-            window.location.href = `presList.html`;
+            let saved = await saveToWeb();
+            if(saved) {
+                // popup success
+                setTimeout(function(){
+                    window.localStorage.removeItem('presentation');
+                    window.location.href = `presList.html`;
+                },1500)
+            }
+            else {
+                // popup failed to save try again
+            }
         } else {
             window.localStorage.removeItem('presentation');
             window.location.href = `presList.html`;
         }
     });
     btnCreateNewPresentation.addEventListener('click', async function (evt) {
-        console.log("Create New Presentation");
-        window.localStorage.removeItem('presentation');
-        init();
-        console.log("on create new presentation, the presentation contains: " + presentation.slides);
+        if(confirm("Do you want to save?")) {
+            savePresLocal();
+            let saved = await saveToWeb();
+            if(saved) {
+                // popup success
+                setTimeout(function(){
+                    window.localStorage.removeItem('presentation');
+                    init();
+                },1500)
+            }
+            else {
+                // popup failed to save try again
+            }
+        }
+        else {
+            window.localStorage.removeItem('presentation');
+            init();
+        }
     });
     btnPresentationMode.addEventListener('click', async function (evt) {
         savePresLocal();
@@ -327,6 +368,7 @@
         } else {
             console.log("presentation NOT saved");
         }
+        localStorage.clear();
         window.location.href = `index.html`;
         console.log("Sign Out");
     });
