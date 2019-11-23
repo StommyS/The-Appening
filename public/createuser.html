@@ -10,11 +10,11 @@
 
 <body>
     <h1>Wannabe-Powerpoint <br>on a sloppy day</h1>
-    <input type="text" id="User" placeholder="User">
+    <input type="text" id="User" placeholder="User" required>
     <br>
     <input type="email" id="email" placeholder="Email">
     <br>
-    <input type="password" id="Pw" placeholder="Password">
+    <input type="password" id="Pw" placeholder="Password" minlength="8" maxlength="30" required>
     <br><br>
     <button id="btnCreate">Create user</button>
     <br>
@@ -27,7 +27,14 @@
     let email = document.getElementById('email');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
-    btnCreate.addEventListener('click', async function(evt) {
+
+    window.onload = init();
+
+    function init() {
+        btnCreate.addEventListener('click', sendCreate);
+    }
+
+    async function sendCreate() {
         /// TODO evaluate password security risks
         let baseurl = "http://localhost:3000/users";
         let updata = {

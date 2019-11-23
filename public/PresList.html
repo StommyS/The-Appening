@@ -32,20 +32,34 @@
 
 <script>
     let welcome = document.getElementById("loggedInnId");
+    let logout = document.getElementById('signOut');
+    let newpres = document.getElementById('createNewPres');
 
     window.onload = init();
 
     async function init(){
-        try {
-            let username = localStorage.getItem("loggedin");
+        let username = localStorage.getItem("loggedin");
+        let token = localStorage.getItem(`logintoken`);
+
+        if(username && token) {
             welcome.innerHTML = `Logged in as ${username}`;
             let presentation = JSON.parse(window.localStorage.getItem('presentation'));
 
+            logout.addEventListener('click', endSession);
+            newpres.addEventListener('click', startPres);
         }
-        catch(error) {
-            console.log(error);
+        else {
             window.location.href = `index.html`;
         }
+    }
+
+    async function endSession() {
+        localStorage.clear();
+        window.location.href = `index.html`;
+    }
+
+    function startPres() {
+        window.location.href = `editMode.html`;
     }
     //code to get the presentations and push them in the DIV with a clickable button
 </script>

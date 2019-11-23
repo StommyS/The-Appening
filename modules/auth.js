@@ -16,7 +16,6 @@ const authenticate = function (req, res, next) {
     else {
         res.status(403).json({message: "token not found"}).end(); // no token, forbidden
     }
-    // checks the token right
 };
 
 module.exports = authenticate;

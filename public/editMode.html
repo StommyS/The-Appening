@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <p id="loggedInnId" class="loggedInnClass">Logged inn as: USERNAME</p>
+    <p id="loggedInId" class="loggedInnClass">Logged in as USERNAME</p>
     <div id="UI" class="UIDiv">
         <div id="uiMenu" class="uiMenuDiv">
             <div>
@@ -71,6 +71,7 @@
     let btnCreateNewPresentation = document.getElementById('btnCreateNewPresentation');
     let btnPresentationMode = document.getElementById('btnPresentationMode');
     let btnSignOut = document.getElementById('btnSignOut');
+    let welcomeBanner = document.getElementById('loggedInId');
 
     //--------------Other variables--------------
     let slideList = document.getElementById('slideList');
@@ -91,21 +92,31 @@
     //-------------init-------------
     window.onload = init();
     function init() {
-        presentation = JSON.parse(window.localStorage.getItem('presentation'));
-        console.log("did we get localstorage?");
-        if (!presentation) {
-            console.log("no...");
-            presentation = {
-                id: undefined,
-                title: "Presentation",
-                theme: "BW",
-                slides: [titleSlideTemp]
-            };
+        let logintoken = localStorage.getItem(`logintoken`);
+        let loginuser = localStorage.getItem(`loggedin`);
+        let loginid = localStorage.getItem(`loggedID`);
+
+        if(logintoken && loginuser){
+            welcomeuser(loginuser);
+            presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            console.log("did we get localstorage?");
+            if (!presentation) {
+                console.log("no...");
+                presentation = {
+                    id: undefined,
+                    title: "Ye Olde Presentatione",
+                    theme: "BW",
+                    slides: [titleSlideTemp]
+                };
+            }
+            cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
+            changeCurrentSlide(presentation.slides[atSlide], atSlide);
+            loadSlides();
+            console.log("on init, the presentation contains: " + presentation.slides);
         }
-        cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
-        changeCurrentSlide(presentation.slides[atSlide]);
-        loadSlides();
-        console.log("on init, the presentation contains: " + presentation.slides);
+        else {
+            window.location.href = `index.html`;
+        }
     }
     
 
@@ -139,6 +150,7 @@
         while (slidePreview.firstChild) {
             slidePreview.removeChild(slidePreview.firstChild);
         }
+        console.log(`slideid: `, slideID);
         atSlide = slideID;
         slidePreviewDiv.innerHTML = newSlideTypeHTML;
         slidePreviewDiv.setAttribute("contenteditable", `true`);
@@ -154,6 +166,10 @@
         changeCurrentSlide(typeOfSlide);
         presentation.slides.push(slidePreviewDiv.innerHTML);
         loadSlides();
+    }
+
+    function welcomeuser(name) {
+        welcomeBanner.innerHTML = `Logged in as ${name}`;
     }
 
     //------------------------------buttons----------------------------------
@@ -225,7 +241,7 @@
         presentation = null;
         window.localStorage.removeItem('presentation');
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
-        window.location.href = `presList.html`
+        window.location.href = `presList.html`;
         console.log("on presentation button, the presentation contains: " + presentation.slides);
     });
 
@@ -237,7 +253,7 @@
     });
 
     btnPresentationMode.addEventListener('click', async function (evt) {
-        window.location.href = `presMode.html`
+        window.location.href = `presMode.html`;
         console.log("Presentation Mode");
         console.log("on presentation mode, the presentation contains: " + presentation.slides);
     });
@@ -245,7 +261,7 @@
     btnSignOut.addEventListener('click', async function (evt) {
         window.localStorage.removeItem('presentation');
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
-        window.location.href = `index.html`
+        window.location.href = `index.html`;
         console.log("Sign Out");
     });
 

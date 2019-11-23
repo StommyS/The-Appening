@@ -25,15 +25,17 @@
     let btnLogin = document.getElementById('btnLogin');
     let result = document.getElementById('result');
 
-    window.addEventListener('keydown', async function(evt) {
-        if(evt.keyCode === 13) {
+    window.onload = function init() {
+        window.addEventListener('keydown', async function(evt) {
+            if(evt.keyCode === 13) {
+                login();
+            }
+        });
+        btnLogin.addEventListener('click', async function(evt) {
             login();
-        }
-    });
+        });
+    };
 
-    btnLogin.addEventListener('click', async function(evt) {
-        login();
-    });
 
     async function login() {
         let username = user.value;
@@ -61,8 +63,9 @@
                 localStorage.setItem(`loggedID`, data.userid);
                 window.location.href = `PresList.html`;
             }
-            console.log(resp);
-            console.log(data);
+            else {
+                // you didn't get logged in :/
+            }
         }
     }
 </script>
