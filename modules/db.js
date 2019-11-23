@@ -76,13 +76,68 @@ const db = function(dconnectionString) {
         }
     };
 
+    const createPresentation = async function(title, slide) {
+        let presentationData = null;
+
+        try {
+            presentationData = runQuery('INSERT INTO presentations ("title", "slide", "userid") VALUES($1, $2, $3) RETURNING *',[title, slide, 30]);
+            return await presentationData;
+        } catch (error) {
+            //we about to find out
+            return await presentationData;
+        }
+    };
+
+    const getPresentation = async function(title) {
+        let presentationData = null;
+
+        try {
+            presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "title" = $1', [title]);
+            return await presentationData;
+        } catch (error) {
+            // expected failure points: no connection, no such user
+            return presentationData;
+        }
+    };
+
+    const deletePresentation = async function(title) {
+        let presentationData = null;
+
+        try {
+            presentationData = runQuery('DELETE * FROM "presentations" WHERE title = $1',[title]);
+            return await presentationData;
+        } catch (error) {
+            //dealth with error
+            return await presentationData;
+        }
+    };
+
+    const updatePresentation = async function(oldtitle, oldslide, newtitle, newslide) {
+        let presentationData = null;
+
+        try {
+            presentationData = await getPresentation(oldtitle, oldslide);
+
+            if(presentationData) {
+                let updated = await runQuery('UPDATE "presentations" SET "title" = $2, "slide" = $3 WHERE pId = $1 RETURNING *',[oldtitle, oldslide, newtitle, newslide, 30]);
+                return await updated[0];
+            }
+        } catch (error) {
+            //dealt with error
+            return await presentationData;
+        }
+    };
 
     return {
         createuser : createUser,
-        deleteuser : deleteUser,
-        deleteall : clearDB,
         getuser : getUser,
-        updateuser : updateUser
+        deleteuser : deleteUser,
+        cleardb : clearDB,
+        updateuser : updateUser,
+        createpresentation : createPresentation,
+        getpresentation : getPresentation,
+        deletepresentation : deletePresentation,
+        updatepresentation : updatePresentation,
     }
 };
 

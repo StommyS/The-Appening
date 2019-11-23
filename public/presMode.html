@@ -18,6 +18,7 @@
     window.addEventListener("keydown", keyPress);
 
     window.onload = init();
+  
     function init() {
         let logintoken = localStorage.getItem(`logintoken`);
         let loginuser = localStorage.getItem(`loggedin`);
@@ -68,7 +69,6 @@
         }
     }
     function exitPres() {
-        alert("LEAVING PRESENTATION");
         window.location.href = `editMode.html`;
     }
 
@@ -85,5 +85,6 @@
             case 13: nextSlide(); break; // enter
         }
     }
+  
 </script>
 </html>
