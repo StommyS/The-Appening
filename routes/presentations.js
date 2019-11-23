@@ -11,9 +11,9 @@ route.post('/', async function (req, res) {
     let updata = req.body;
 
     try {
-        let createdPresentation = await db.createpresentation(updata.title, updata.slide, updata.userid);
+        let createdPresentation = await db.createpresentation(updata.title, updata.slides, updata.userid, updata.theme);
         if(await createdPresentation) {
-            res.status(200).json({message: "Presentation created successfully"});
+            res.status(200).json({message: "Presentation created successfully", id: createdPresentation.pId});
         } else {
             res.status(500).json({message: "Couldn't create presentation!"});
         }
