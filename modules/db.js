@@ -4,28 +4,39 @@ const db = function(dconnectionString) {
     const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
+        await pool.connect(); // Did I connect? throw an error??
         const res = await pool.query(query, params);
         let response = res.rows; // Did we get anything?? Dont care. SEP
-        return response;
+        return response
     }
 
-    const createUser = async function(name,pwhash, email, salt){
+    const createUser = async function(name, pwhash, email) {
         let userData = null;
         try {
-            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email", "salt") VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *',[name, pwhash, email, salt]);
-            return await userData[0];
+            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email") VALUES(DEFAULT, $1, $2, $3) RETURNING *',[name, pwhash, email]);
+            return await userData;
         } catch (error) {
             // expected failure points: user already exists, no data sent, no database available.
-            console.log(error);
             return userData;
         }
     };
+
+    /*const deleteUser = async function(id) {
+        let userData = null;
+
+        try {
+            userData = await runQuery('DELETE * FROM "user" WHERE id = $1',[id]);
+            return await userData;
+        } catch (error) {
+            //failure: no connection?
+        }
+    };*/
 
     const getUser = async function(name) {
         let userData = null;
         try {
             userData =  await runQuery('SELECT * FROM public."user" WHERE "username" = $1', [name]);
-            return await userData[0];
+            return await userData;
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
             console.log(error);
@@ -37,29 +48,9 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('DELETE FROM public."user" WHERE "username" = $1 RETURNING *',[name]);
-            return await userData[0];
+            return await userData;
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
-            console.log(error);
-            return userData;
-        }
-    };
-
-    const updateUser = async function(newname, oldname) {
-        let userData = null;
-
-        try {
-            userData = await getUser(oldname);
-
-            if(userData) {
-                let id = userData[0].id;
-
-                let updated =  await runQuery('UPDATE public."user" SET username = $1 WHERE id = $2 RETURNING *', [newname,id]);
-                return await updated[0];
-            }
-
-        }catch (error) {
-            console.log("is this the failing one?");
             console.log(error);
             return userData;
         }
@@ -76,11 +67,33 @@ const db = function(dconnectionString) {
         }
     };
 
-    const createPresentation = async function(title, slide) {
+    const updateUser = async function(id, name, pwhash, email) {
+        let userData = null;
+        
+        try {
+            userData = await runQuery('UPDATE "user" SET "username" = $2, "password" = $3, "email" = $4 WHERE id = $1 RETURNING *',[id, name, pwhash, email]);
+            return await userData;
+        } catch (error) {
+            //deal with error.... done?
+            return userData;
+        }
+    };
+
+    const userLogin = async function() {
+        //some code
+
+        try {
+            userData = await runQuery('',[]);
+        } catch (error) {
+            //deal with error
+        }
+    };
+
+    const createPresentation = async function(title, slide, userid) {
         let presentationData = null;
 
         try {
-            presentationData = runQuery('INSERT INTO presentations ("title", "slide", "userid") VALUES($1, $2, $3) RETURNING *',[title, slide, 30]);
+            presentationData = runQuery('INSERT INTO presentations ("title", "slide", "userid") VALUES($1, $2, $3) RETURNING *',[title, slide, userid]);
             return await presentationData;
         } catch (error) {
             //we about to find out
@@ -88,11 +101,11 @@ const db = function(dconnectionString) {
         }
     };
 
-    const getPresentation = async function(title) {
+    const getPresentation = async function(pId) {
         let presentationData = null;
 
         try {
-            presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "title" = $1', [title]);
+            presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "pId" = $1', [pId]);
             return await presentationData;
         } catch (error) {
             // expected failure points: no connection, no such user
@@ -100,11 +113,11 @@ const db = function(dconnectionString) {
         }
     };
 
-    const deletePresentation = async function(title) {
+    const deletePresentation = async function(pId) {
         let presentationData = null;
 
         try {
-            presentationData = runQuery('DELETE * FROM "presentations" WHERE title = $1',[title]);
+            presentationData = runQuery('DELETE FROM public.presentations WHERE "pId" = $1', [pId]);
             return await presentationData;
         } catch (error) {
             //dealth with error
@@ -112,16 +125,24 @@ const db = function(dconnectionString) {
         }
     };
 
-    const updatePresentation = async function(oldtitle, oldslide, newtitle, newslide) {
+    const updatePresentation = async function(title, pId) {
         let presentationData = null;
 
         try {
-            presentationData = await getPresentation(oldtitle, oldslide);
+            presentationData = runQuery('UPDATE public.presentations SET "title" = $1 WHERE "pId" = $2 RETURNING *',[title, pId]);
+            return await presentationData;
+        } catch (error) {
+            //dealt with error
+            return await presentationData;
+        }
+    };
 
-            if(presentationData) {
-                let updated = await runQuery('UPDATE "presentations" SET "title" = $2, "slide" = $3 WHERE pId = $1 RETURNING *',[oldtitle, oldslide, newtitle, newslide, 30]);
-                return await updated[0];
-            }
+    const updateSlide = async function(slide, pId) {
+        let presentationData = null;
+
+        try {
+        presentationData = runQuery('UPDATE public.presentations SET "slide" = $1 WHERE "pId" = $2 RETURNING *',[slide, pId]);
+            return await presentationData;
         } catch (error) {
             //dealt with error
             return await presentationData;
@@ -134,10 +155,12 @@ const db = function(dconnectionString) {
         deleteuser : deleteUser,
         cleardb : clearDB,
         updateuser : updateUser,
+        userlogin : userLogin,
         createpresentation : createPresentation,
         getpresentation : getPresentation,
         deletepresentation : deletePresentation,
         updatepresentation : updatePresentation,
+        updateslide : updateSlide,
     }
 };
 
