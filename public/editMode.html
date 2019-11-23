@@ -180,11 +180,11 @@
 
     function deleteCurrentSlide(){
         presentation.slides.splice(atSlide,1);
-        atSlide--
-        if(atSlide == -1){
+        atSlide--;
+        if(atSlide === -1){
             atSlide++
         }
-        if(presentation.slides.length == 0){
+        if(presentation.slides.length === 0){
         window.localStorage.removeItem('presentation');
         window.location.href = `presList.html`
         }
@@ -193,12 +193,56 @@
         console.log("end of deleteSlide: "+atSlide);
     }
 
-    function savePresentation(){
+    function savePresLocal(){
         presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
         loadSlides();
         window.localStorage.removeItem('presentation');
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
         console.log("on save, the presentation contains: " + presentation.slides);
+    }
+
+    async function saveToWeb() {
+        if(localStorage.getItem(`presentation`)) {
+            let baseurl = `http://localhost:3000/presentations`;
+            let token = localStorage.getItem(`logintoken`);
+            if(presentation.id) {
+                let cfg = {
+                    method: "PUT",
+                    headers: {"Content-Type":"application/json",
+                        "authorization": `${token}`},
+                    body: JSON.stringify(presentation)
+                };
+                let resp = await fetch(`${baseurl}`, cfg);
+                let data = await resp.json();
+                if(data.ok) {
+                    alert("Presentation saved successfully.");
+                }
+                else {
+                    alert("We couldn't save your presentation.");
+                }
+            }
+            else {
+                let updata = {
+                    title: presentation.title,
+                    theme: presentation.theme,
+                    slides: presentation.slides
+                };
+                let cfg = {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json",
+                        "authorization": `${token}`},
+                    body: JSON.stringify(updata)
+                };
+                let resp = await fetch(`${baseurl}`, cfg);
+                let data = await resp.json();
+                if(data.ok) {
+                    alert("Presentation saved successfully.");
+                }
+                else {
+                    alert("We couldn't save your presentation.");
+                }
+            }
+        }
     }
 
     //------------------------------buttons----------------------------------
@@ -251,16 +295,18 @@
         cssLinkID.setAttribute("href", `./CSS/redEditModeCSS.css`);
     });
     btnSave.addEventListener('click', async function (evt) {
-        console.log("Save");
-        savePresentation()
+        savePresLocal()
     });
     btnPresentations.addEventListener('click', async function (evt) {
-        console.log("Presentations");
-        presentation = null;
-        window.localStorage.removeItem('presentation');
-        window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
-        window.location.href = `presList.html`;
-        console.log("on presentation button, the presentation contains: " + presentation.slides);
+        if(confirm("Do you want to save?")) {
+            savePresLocal();
+            saveToWeb();
+            window.localStorage.removeItem('presentation');
+            window.location.href = `presList.html`;
+        } else {
+            window.localStorage.removeItem('presentation');
+            window.location.href = `presList.html`;
+        }
     });
     btnCreateNewPresentation.addEventListener('click', async function (evt) {
         console.log("Create New Presentation");
@@ -269,19 +315,19 @@
         console.log("on create new presentation, the presentation contains: " + presentation.slides);
     });
     btnPresentationMode.addEventListener('click', async function (evt) {
-        savePresentation()
-        window.location.href = `presMode.html`
+        savePresLocal();
+        window.location.href = `presMode.html`;
         console.log("Presentation Mode");
         console.log("on presentation mode, the presentation contains: " + presentation.slides);
     });
     btnSignOut.addEventListener('click', async function (evt) {
         if (confirm("Do you want to save this presentation before signing out?")){
-            savePresentation()
+            savePresLocal();
             console.log("presentation saved");
         } else {
             console.log("presentation NOT saved");
         }
-        window.location.href = `index.html`
+        window.location.href = `index.html`;
         console.log("Sign Out");
     });
     btnDeletePres.addEventListener('click', async function (evt) {
