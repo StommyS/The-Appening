@@ -20,6 +20,7 @@
     window.addEventListener("keydown", keyPress);
 
     window.onload = init();
+  
     function init() {
         presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
 
@@ -59,7 +60,6 @@
         }
     }
     function exitPres() {
-        alert("LEAVING PRESENTATION");
         window.location.href = `editMode.html`;
     }
 
@@ -75,8 +75,7 @@
             case 27: exitPres(); break;  // esc
             case 13: nextSlide(); break; // enter
         }
-        //find keys
-        // up, down, left, right, space, escape, enter
     }
+  
 </script>
 </html>

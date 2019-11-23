@@ -1,11 +1,13 @@
 const express = require("express");
 const route = express.Router();
 
+
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 
 const secrets = require('../secret.js');
 const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
+
 const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("../modules/db")(dbConnection);
@@ -38,6 +40,7 @@ route.post('/create', async function (req, res) {
 });
 
 route.get('/', authenticate, async function(req,res) {
+
     let updata = req.body;
     let user = null;
     try {
@@ -77,6 +80,7 @@ route.put('/update', authenticate, async function (req, res) {
         }
         else{
             res.status(500).json({message: "Database error"});
+
         }
     }
     catch (err) {
@@ -126,6 +130,5 @@ route.delete('/wipe', authenticate, async function(req,res) {
         res.status(500).json({error: err});
     }
 });
-
 
 module.exports = route;
