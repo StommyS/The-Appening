@@ -76,7 +76,7 @@ route.put('/update', authenticate, async function (req, res) {
         let newname = updata.newname;
         let updatedUser = await db.updateuser(newname, updata.name);
         if (await updatedUser) {
-            res.status(200).json({message: "User successfully updated.", username: updatedUser, oldusername: updata.name, email:updatedUser.email});
+            res.status(200).json({message: "User successfully updated.", username: updatedUser.name, oldusername: updata.name, email:updatedUser.email});
         }
         else{
             res.status(500).json({message: "Database error"});
@@ -94,8 +94,8 @@ route.post('/login', async function(req, res) {
    try {
        let dbuser = await db.getuser(updata.name);
        if(await dbuser) {
-
            const salt = dbuser.salt;
+           console.log(dbuser);
            const hash = crypto.createHmac('sha256', salt);
            hash.update(updata.password);
            const pwcompare = hash.digest('hex');
