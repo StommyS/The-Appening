@@ -14,29 +14,18 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email") VALUES(DEFAULT, $1, $2, $3) RETURNING *',[name, pwhash, email]);
-            return await userData;
+            return await userData[0];
         } catch (error) {
             // expected failure points: user already exists, no data sent, no database available.
             return userData;
         }
     };
 
-    /*const deleteUser = async function(id) {
-        let userData = null;
-
-        try {
-            userData = await runQuery('DELETE * FROM "user" WHERE id = $1',[id]);
-            return await userData;
-        } catch (error) {
-            //failure: no connection?
-        }
-    };*/
-
     const getUser = async function(name) {
         let userData = null;
         try {
             userData =  await runQuery('SELECT * FROM public."user" WHERE "username" = $1', [name]);
-            return await userData;
+            return await userData[0];
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
             console.log(error);
@@ -48,7 +37,7 @@ const db = function(dconnectionString) {
         let userData = null;
         try {
             userData =  await runQuery('DELETE FROM public."user" WHERE "username" = $1 RETURNING *',[name]);
-            return await userData;
+            return await userData[0];
         } catch (error) {
             // expected failure points: no such user, no data sent, no database
             console.log(error);
@@ -79,16 +68,6 @@ const db = function(dconnectionString) {
         }
     };
 
-    const userLogin = async function() {
-        //some code
-
-        try {
-            userData = await runQuery('',[]);
-        } catch (error) {
-            //deal with error
-        }
-    };
-
     const createPresentation = async function(title, slide, userid) {
         let presentationData = null;
 
@@ -101,11 +80,11 @@ const db = function(dconnectionString) {
         }
     };
 
-    const getPresentation = async function(pId) {
+    const getPresentation = async function(userid) {
         let presentationData = null;
 
         try {
-            presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "pId" = $1', [pId]);
+            presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "userid" = $1', [userid]);
             return await presentationData;
         } catch (error) {
             // expected failure points: no connection, no such user
@@ -117,10 +96,10 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-            presentationData = runQuery('DELETE FROM public.presentations WHERE "pId" = $1', [pId]);
+            presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1', [pId]);
             return await presentationData;
         } catch (error) {
-            //dealth with error
+            //deal with error
             return await presentationData;
         }
     };
@@ -129,10 +108,10 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-            presentationData = runQuery('UPDATE public.presentations SET "title" = $1 WHERE "pId" = $2 RETURNING *',[title, pId]);
+            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1 WHERE "pId" = $2 RETURNING *',[title, pId]);
             return await presentationData;
         } catch (error) {
-            //dealt with error
+            //deal with error
             return await presentationData;
         }
     };
@@ -141,10 +120,10 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-        presentationData = runQuery('UPDATE public.presentations SET "slide" = $1 WHERE "pId" = $2 RETURNING *',[slide, pId]);
+            presentationData = await runQuery('UPDATE public.presentations SET "slide" = $1 WHERE "pId" = $2 RETURNING *',[slide, pId]);
             return await presentationData;
         } catch (error) {
-            //dealt with error
+            //deal with error
             return await presentationData;
         }
     };
@@ -155,7 +134,6 @@ const db = function(dconnectionString) {
         deleteuser : deleteUser,
         cleardb : clearDB,
         updateuser : updateUser,
-        userlogin : userLogin,
         createpresentation : createPresentation,
         getpresentation : getPresentation,
         deletepresentation : deletePresentation,

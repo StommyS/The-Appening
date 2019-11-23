@@ -27,13 +27,10 @@
     let email = document.getElementById('email');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
-
     window.onload = init();
-
     function init() {
         btnCreate.addEventListener('click', sendCreate);
     }
-
     async function sendCreate() {
         /// TODO evaluate password security risks
         let baseurl = "http://localhost:3000/users";
@@ -65,7 +62,7 @@
         catch (err) {
             console.log(err);
         }
-    };
+    }
 </script>
 
 </html>
