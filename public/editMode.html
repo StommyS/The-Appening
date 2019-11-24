@@ -21,7 +21,15 @@
                 <button id="btnNewTextSlide" class="button1">New Text Slide</button>
             </div>
             <div class="specialDivForThemes">
-                <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
+                    
+                            <select id="imgSelectID" class="imgSelectClass" onchange="changeIMG()">
+                              <option value="cat">Cat</option>
+                              <option value="bird">Bird</option>
+                              <option value="london">London</option>
+                              <option value="watch">Watch</option>
+                              <option value="wolf">Wolf</option>
+                            </select>
+                        
                 <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
                 <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
                 <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
@@ -83,10 +91,11 @@
     let slidePreview = document.getElementById('slidePreview');
     let slidePreviewDiv = document.getElementById('slidePreviewDiv');
     let presentation;
+    let imgFile = "cat"
     let titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
     let imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
                     <div>
-                        <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg">
+                        <img src="./IMG/${imgFile}IMG.jpg">
                     </div>`;
     let textSlideTemp = `
         <h2 style="overflow:hidden;">List title</h2>
@@ -238,6 +247,19 @@
             }
         }
     }
+
+    function changeIMG(){
+        let imgSelectID = document.getElementById('imgSelectID').value;
+        imgFile = imgSelectID;
+        console.log("imgSelectID: "+ imgSelectID)
+        console.log("imgFile: "+ imgFile)
+        imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
+                    <div>
+                        <img src="./IMG/${imgFile}IMG.jpg">
+                    </div>`;
+        loadSlides();
+    }
+
     //------------------------------buttons----------------------------------
     btnNewTitleSlide.addEventListener('click', async function (evt) {
         console.log("newTitle");
