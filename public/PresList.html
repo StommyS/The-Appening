@@ -27,8 +27,6 @@
 
 <script>
     const shareinp = document.getElementById('share');
-    const sharebtn = document.getElementById('sharebtn');
-    const unsharebtn = document.getElementById('unsharebtn');
     const titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
     const presentation = {
         id: undefined,
@@ -63,10 +61,7 @@
     async function loadPresentations(token) {
         let userid = localStorage.getItem(`loggedID`);
         let url = `http://localhost:3000/presentations`;
-      
-        let updata = {
-            userid: userid
-        };
+
         let cfg = {
             method: "GET",
             headers: {"Content-Type":"application/json",
@@ -109,14 +104,17 @@
                                 <p style = "margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
                             <div style="text-align: right">
-                                <button style="height:65px; font-size: 25px;">Share</button>
+                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith()">Share</button>
                                 <br>
-                                <button style="height:65px; font-size: 25px;">Unshare</button>
+                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation()">Unshare</button>
                             </div>
-                            </div>`
+                            </div>`;
             PresInfoDiv.innerHTML = presInfo;
             slideDiv.appendChild(PresInfoDiv);
             presList.appendChild(slideDiv);
+            /// TODO PresInfoDiv? add event listener 'click', SELECTS (copy into local storage as 'presentation') that presentation.
+            // This is important ? I think.
+            /// TODO alternatively figure out how to get the info of the div the button is in. We need presentation title.
     //sharebtn.addEventListener('click', sharePresentationWith);
     //unsharebtn.addEventListener('click', unsharePresentation);
         }
