@@ -43,7 +43,7 @@
 
         if(username && token) {
             welcome.innerHTML = `Logged in as ${username}`;
-            let presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            loadPresentations(token);
 
             logout.addEventListener('click', endSession);
             newpres.addEventListener('click', startPres);
@@ -52,6 +52,27 @@
             window.location.href = `index.html`;
         }
     }
+
+    async function loadPresentations(token) {
+        let userid = localStorage.getItem(`loggedID`);
+        let url = `http://localhost:3000/presentations`;
+
+        let updata = {
+            userid: userid
+        };
+        let cfg = {
+            method: "GET",
+            headers: {"Content-Type":"application/json",
+                "authorization": `${token}`,
+                "userid" : `${userid}`},
+        };
+        let resp = await fetch(url, cfg);
+        if(resp.ok){
+            let presentations = await resp.json();
+            console.log("Fetched it all!");
+        }
+    }
+
 
     async function endSession() {
         localStorage.clear();
