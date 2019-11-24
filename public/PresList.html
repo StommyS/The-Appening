@@ -63,14 +63,13 @@
         let cfg = {
             method: "GET",
             headers: {"Content-Type":"application/json",
-                "authorization": `${token}`},
-            body: JSON.stringify(updata)
+                "authorization": `${token}`,
+                "userid" : `${userid}`},
         };
         let resp = await fetch(url, cfg);
         if(resp.ok){
-            let presentations = resp.json();
+            let presentations = await resp.json();
             console.log("Fetched it all!");
-            console.log(presentations);
         }
     }
 

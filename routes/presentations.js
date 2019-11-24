@@ -81,10 +81,9 @@ route.put('/update', authenticate, async function (req, res) {
     }
 });
 
-route.get('/', authenticate, async function(req,res) {
-    let updata = req.body;
+route.get('/', authenticate, async function(req, res) {
+    let updata = req.headers;
     let presentations = null;
-
     try {
         presentations = await db.getpresentation(updata.userid);
         if(await presentations) {
