@@ -99,7 +99,7 @@ route.get('/', authenticate, async function(req, res) {
     try {
         presentations = await db.getpresentation(updata.userid);
         if(await presentations) {
-            res.status(200).json({message: "Presentations found", allprts: presentations});
+            await res.status(200).json({message: "Presentations found", allprts: presentations});
         }
         else {
             res.status(500).json({message: "No presentations!"})//or nothing, or connection issues

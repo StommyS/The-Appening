@@ -12,29 +12,17 @@
     <p id="loggedInnId" class="loggedInnClass">Logged in as: USERNAME</p>
     <h1>Presentations:</h1>
     <div class="buttonDivClassDiv">
-    <div id="buttonDiv" class="buttonDivClass">
-        <button id="createNewPres">Create New Presentation</button>
-        <button id="deletePres">Delete Presentations</button>
-    </div>
-    <div id="signOutButtonDiv" class="signOutButtonDivClass">
-            <button id="signOut">Sign out</button>
-    </div>
-    </div>
-    <div id="presList" class="presListDiv">
-        <div style="width:auto; height: auto; background-color: gray; margin: 10px;"></div>
-        <div>
-                <h2>Pres title</h2>
-                <p>info om presentasjon</p>
+        <div id="buttonDiv" class="buttonDivClass">
+            <button id="createNewPres">Create New Presentation</button>
         </div>
-        
+        <input placeholder="user to share with" style="width: 96%; margin: 6px;"></input>
+        <div id="signOutButtonDiv" class="signOutButtonDivClass">
+            <button id="signOut">Sign out</button>
+        </div>
     </div>
-
-<div>
-    <label for="share">share with username</label>
-    <input id="share" type="text">
-    <button id="sharebtn">share!</button>
-    <button id="unsharebtn">unshare!</button>
-</div>
+    <div id="presList" class="presListDiv">        
+    </div>
+    <button style="width: 20%;">Delete user</button>
 </body>
 
 <script>
@@ -54,17 +42,16 @@
     let welcome = document.getElementById("loggedInnId");
     let logout = document.getElementById('signOut');
     let newpres = document.getElementById('createNewPres');
+    let presList = document.getElementById('presList');
 
     window.onload = init();
 
     async function init(){
         let username = localStorage.getItem("loggedin");
         let token = localStorage.getItem(`logintoken`);
-
         if(username && token) {
             welcome.innerHTML = `Logged in as ${username}`;
             loadPresentations(token);
-
             logout.addEventListener('click', endSession);
             newpres.addEventListener('click', startPres);
         }
@@ -76,7 +63,7 @@
     async function loadPresentations(token) {
         let userid = localStorage.getItem(`loggedID`);
         let url = `http://localhost:3000/presentations`;
-
+      
         let updata = {
             userid: userid
         };
@@ -89,32 +76,51 @@
         let resp = await fetch(url, cfg);
         if(resp.ok){
             let presentations = await resp.json();
+            loadPres(presentations);
             console.log("Fetched it all!");
-            console.log(presentations);
-            console.log(presentations.allprts);
-            console.log(JSON.parse(presentations.allprts[presentations.allprts.length-1].slide));
-            for(let presentation of presentations.allprts) {
-                let parsedpres = JSON.parse(presentation.slide);
-                let presDiv = document.createElement('div');
-                presDiv.innerHTML = parsedpres[0];
-                presList.appendChild(presDiv);
-            }
         }
     }
-
-
     async function endSession() {
         localStorage.clear();
         window.location.href = `index.html`;
     }
-
     function startPres() {
         window.location.href = `editMode.html`;
     }
 
 
-    sharebtn.addEventListener('click', sharePresentationWith);
-    unsharebtn.addEventListener('click', unsharePresentation);
+    function loadPres(presentations){
+        for(let presentation of presentations.allprts) {
+            //getting the first slide of the presentations
+            let parsedpres = JSON.parse(presentation.slide);
+            let slideDiv = document.createElement('div');
+            let firstSlideDiv = document.createElement('div');
+            firstSlideDiv.setAttribute("class", `firstSlideDiv`);
+            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${presentation.theme}; margin: 10px;`);
+            firstSlideDiv.innerHTML = parsedpres[0];
+            slideDiv.setAttribute("class", `presIDClass`);
+            slideDiv.appendChild(firstSlideDiv);
+
+            //getting other info from the slide:
+            let PresInfoDiv = document.createElement('div');
+            let presInfo = `<div class="infoClass">
+                            <div>
+                                <h2 style = "margin-bottom:5px;">${presentation.title}</h2>
+                                <p style = "margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
+                            </div>
+                            <div style="text-align: right">
+                                <button style="height:65px; font-size: 25px;">Share</button>
+                                <br>
+                                <button style="height:65px; font-size: 25px;">Unshare</button>
+                            </div>
+                            </div>`
+            PresInfoDiv.innerHTML = presInfo;
+            slideDiv.appendChild(PresInfoDiv);
+            presList.appendChild(slideDiv);
+    //sharebtn.addEventListener('click', sharePresentationWith);
+    //unsharebtn.addEventListener('click', unsharePresentation);
+        }
+    }
 
     async function sharePresentationWith() {
         let token = localStorage.getItem(`logintoken`);
@@ -174,4 +180,5 @@
         }
     }
 </script>
+
 </html>
