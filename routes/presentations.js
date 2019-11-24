@@ -30,9 +30,21 @@ route.post('/share', authenticate, async function (req, res) {
    let updata = req.body;
 
    try {
-       let sharedPresentation = await db.sharepresentation(updata.title, updata.slides, updata.theme, updata.userid, updata.recipient);
-       if(await sharedPresentation) {
-           res.status(200).json({message: "Presentation shared successfully."});
+       let shareTo = await db.getuser(updata.recipient);
+       if(await shareTo) {
+           try {
+               let sharedPresentation = await db.sharepresentation(updata.title, updata.slides, updata.theme, updata.userid, shareTo.id);
+               if(await sharedPresentation) {
+                   res.status(200).json({message: "Presentation shared successfully."});
+               }
+               else {
+                   res.status(500).json({message: "Sharing failed."});
+               }
+           }
+           catch(err) {
+               console.log(err);
+               res.status(500).json({error: err});
+           }
        }
        else {
            res.status(500).json({message: "Sharing failed."});
@@ -132,6 +144,25 @@ route.delete('/all', authenticate, async function (req, res) {
         console.log(err);
         res.status(500).json({error: err});
     }
+});
+
+route.delete('/unshare', authenticate, async function (req,res) {
+    let updata = req.body;
+
+    try{
+        let unshared = await db.unsharepres(updata.userid, updata.title);
+        if(await unshared) {
+            res.status(200).json({message: "Presentation unshared."});
+        }
+        else {
+            res.status(500).json({message: "Failed to unshare presentation"});
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json()
+    }
+
 });
 
 module.exports = route;

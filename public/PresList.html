@@ -26,6 +26,19 @@
 </body>
 
 <script>
+    const shareinp = document.getElementById('share');
+    const sharebtn = document.getElementById('sharebtn');
+    const unsharebtn = document.getElementById('unsharebtn');
+    const titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
+    const presentation = {
+        id: undefined,
+        title: "Ye Olde Presentatione",
+        theme: "BW",
+        slides: [titleSlideTemp]
+    };
+
+
+    /// ---------------------------------------------
     let welcome = document.getElementById("loggedInnId");
     let logout = document.getElementById('signOut');
     let newpres = document.getElementById('createNewPres');
@@ -50,6 +63,7 @@
     async function loadPresentations(token) {
         let userid = localStorage.getItem(`loggedID`);
         let url = `http://localhost:3000/presentations`;
+      
         let updata = {
             userid: userid
         };
@@ -66,7 +80,6 @@
             console.log("Fetched it all!");
         }
     }
-
     async function endSession() {
         localStorage.clear();
         window.location.href = `index.html`;
@@ -104,11 +117,68 @@
             PresInfoDiv.innerHTML = presInfo;
             slideDiv.appendChild(PresInfoDiv);
             presList.appendChild(slideDiv);
+    //sharebtn.addEventListener('click', sharePresentationWith);
+    //unsharebtn.addEventListener('click', unsharePresentation);
         }
     }
 
+    async function sharePresentationWith() {
+        let token = localStorage.getItem(`logintoken`);
+        let userid = localStorage.getItem(`loggedID`);
 
+        const baseurl = `http://localhost:3000/presentations/share`;
+        let recipient = shareinp.value;
 
+        let updata = {
+            title: presentation.title,
+            theme: presentation.theme,
+            slides: presentation.slides,
+            userid: userid,
+            recipient : recipient
+        };
+        let cfg = {
+            method: "POST",
+            headers: {"Content-Type":"application/json",
+                "authorization": `${token}`},
+            body: JSON.stringify(updata)
+        };
+        let resp = await fetch(`${baseurl}`, cfg);
+        if(resp.ok) {
+            alert("Presentation shared successfully.");
+        }
+        else {
+            alert("We couldn't share your presentation.");
+        }
+    }
+
+    async function unsharePresentation() {
+        let url = `http://localhost:3000/presentations/unshare`;
+        let token = localStorage.getItem(`logintoken`);
+        let userid = localStorage.getItem(`loggedID`);
+
+        let updata = {
+            title : presentation.title,
+            userid: userid
+        };
+
+        let cfg = {
+            method: "DELETE",
+            headers: {
+                "Content-Type":"application/json",
+                "authorization": `${token}`
+            },
+            body: JSON.stringify(updata)
+        };
+        let resp = await fetch(url,cfg);
+        let data = await resp.json();
+        console.log(data);
+        if(resp.ok) {
+            alert("Presentation unshared.");
+        }
+        else {
+            alert("Presentation unsharing failed.");
+        }
+    }
 </script>
 
 </html>

@@ -9,10 +9,10 @@ const db = function(dconnectionString) {
         return response
     }
 
-    const createUser = async function(name, pwhash, email) {
+    const createUser = async function(name, pwhash, email, salt) {
         let userData = null;
         try {
-            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email") VALUES(DEFAULT, $1, $2, $3) RETURNING *',[name, pwhash, email]);
+            userData =  await runQuery('INSERT INTO "user" (id, "username", "password", "email", "salt") VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *',[name, pwhash, email, salt]);
             return await userData[0];
         } catch (error) {
             // expected failure points: user already exists, no data sent, no database available.
@@ -62,7 +62,6 @@ const db = function(dconnectionString) {
             userData = await runQuery('UPDATE "user" SET "username" = $2, "password" = $3, "email" = $4 WHERE id = $1 RETURNING *',[id, name, pwhash, email]);
             return await userData;
         } catch (error) {
-            //deal with error.... done?
             return userData;
         }
     };
@@ -75,7 +74,6 @@ const db = function(dconnectionString) {
                 [title, slide, theme, userid, true, userid]);
             return await presentationData[0];
         } catch (error) {
-            //we about to find out
             return await presentationData;
         }
     };
@@ -96,7 +94,7 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-            presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1', [pId]);
+            presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1 RETURNING *', [pId]);
             return await presentationData[0];
         } catch (error) {
             //deal with error
@@ -108,7 +106,8 @@ const db = function(dconnectionString) {
       let deleted = null;
 
       try {
-          deleted = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1', userID);
+          deleted = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 RETURNING *', userID);
+          return await deleted;
       }
       catch (error) {
           console.log(error);
@@ -132,13 +131,27 @@ const db = function(dconnectionString) {
         let sharedPresentation = null;
 
         try {
-            sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6',
+            sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6)',
                 [title, slides, theme, recipient, false, owner]);
             return await sharedPresentation;
         }
         catch (error) {
             console.log(error);
             return sharedPresentation;
+        }
+    };
+
+    const unsharePresentation = async function(owner, title) {
+        let unshared = null;
+
+        try {
+            unshared = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 AND "title" = $2 AND "writable" = $3 RETURNING *', [owner, title, false]);
+            return await unshared;
+        }
+        catch(error) {
+            console.log(error);
+            console.log("it failed");
+            return unshared;
         }
     };
 
@@ -166,6 +179,7 @@ const db = function(dconnectionString) {
         updatepresentation : updatePresentation,
         updateslide : updateSlide,
         sharepresentation : sharePresentation,
+        unsharepres : unsharePresentation,
         deleteyours : nukePresentations
     }
 };
