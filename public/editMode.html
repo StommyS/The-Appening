@@ -191,6 +191,7 @@
         console.log("saving to web");
         if(localStorage.getItem(`presentation`)) {
             console.log("found presentation in localstorage");
+
             let baseurl = `http://localhost:3000/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
