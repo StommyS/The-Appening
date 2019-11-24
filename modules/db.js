@@ -72,7 +72,8 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-            presentationData = await runQuery('INSERT INTO presentations ("title", "slide", "userid", "theme") VALUES($1, $2, $3, $4) RETURNING *',[title, slide, userid, theme]);
+            presentationData = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
+                [title, slide, theme, userid, true, userid]);
             return await presentationData[0];
         } catch (error) {
             //we about to find out
@@ -80,12 +81,12 @@ const db = function(dconnectionString) {
         }
     };
 
-    const getPresentation = async function(userid) {
+    const getPresentations = async function(userid) {
         let presentationData = null;
 
         try {
             presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "userid" = $1', [userid]);
-            return await presentationData[0];
+            return await presentationData;
         } catch (error) {
             // expected failure points: no connection, no such user
             return presentationData;
@@ -104,15 +105,41 @@ const db = function(dconnectionString) {
         }
     };
 
-    const updatePresentation = async function(title, pId) {
+    const nukePresentations = async function (userID) {
+      let deleted = null;
+
+      try {
+          deleted = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1', userID);
+      }
+      catch (error) {
+          console.log(error);
+          return deleted;
+      }
+    };
+
+    const updatePresentation = async function(title, slides, theme, pId) {
         let presentationData = null;
 
         try {
-            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1 WHERE "pId" = $2 RETURNING *',[title, pId]);
+            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1, "slide = $2, "theme = $3 WHERE "pId" = $4 RETURNING *',[title, slides, theme, pId]);
             return await presentationData[0];
         } catch (error) {
             //deal with error
             return await presentationData;
+        }
+    };
+
+    const sharePresentation = async function(title, slides, theme, owner, recipient) {
+        let sharedPresentation = null;
+
+        try {
+            sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6',
+                [title, slides, theme, recipient, false, owner]);
+            return await sharedPresentation;
+        }
+        catch (error) {
+            console.log(error);
+            return sharedPresentation;
         }
     };
 
@@ -135,10 +162,12 @@ const db = function(dconnectionString) {
         cleardb : clearDB,
         updateuser : updateUser,
         createpresentation : createPresentation,
-        getpresentation : getPresentation,
+        getpresentation : getPresentations,
         deletepresentation : deletePresentation,
         updatepresentation : updatePresentation,
         updateslide : updateSlide,
+        sharepresentation : sharePresentation,
+        deleteyours : nukePresentations
     }
 };
 
