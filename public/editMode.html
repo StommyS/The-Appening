@@ -143,7 +143,7 @@
             slideDiv.setAttribute("class", `slidePreviewDivSmall`);
             slideList.appendChild(slideDiv);
         }
-        console.log("end of loadSLides: "+atSlide);
+        console.log("end of loadSLides: " + atSlide);
     }
     //------------------------------------------------------------
     function changeCurrentSlide(newSlideTypeHTML, slideID) {
@@ -197,6 +197,7 @@
             let userid = localStorage.getItem(`loggedID`);
             if(presentation.id) {
                 console.log("presentation already has id");
+                presentation.slides = JSON.stringify(presentation.slides);
                 let cfg = {
                     method: "PUT",
                     headers: {"Content-Type":"application/json",
@@ -218,7 +219,7 @@
                 let updata = {
                     title: presentation.title,
                     theme: presentation.theme,
-                    slides: presentation.slides,
+                    slides: JSON.stringify(presentation.slides),
                     userid: userid
                 };
                 let cfg = {

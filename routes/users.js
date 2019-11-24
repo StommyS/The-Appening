@@ -95,7 +95,6 @@ route.post('/login', async function(req, res) {
        let dbuser = await db.getuser(updata.name);
        if(await dbuser) {
            const salt = dbuser.salt;
-           console.log(dbuser);
            const hash = crypto.createHmac('sha256', salt);
            hash.update(updata.password);
            const pwcompare = hash.digest('hex');
