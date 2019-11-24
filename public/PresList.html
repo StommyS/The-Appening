@@ -12,20 +12,27 @@
     <p id="loggedInnId" class="loggedInnClass">Logged in as: USERNAME</p>
     <h1>Presentations:</h1>
     <div class="buttonDivClassDiv">
-    <div id="buttonDiv" class="buttonDivClass">
-        <button id="createNewPres">Create New Presentation</button>
-        <button id="deletePres">Delete Presentations</button>
-    </div>
-    <div id="signOutButtonDiv" class="signOutButtonDivClass">
+        <div id="buttonDiv" class="buttonDivClass">
+            <button id="createNewPres">Create New Presentation</button>
+        </div>
+        <div id="signOutButtonDiv" class="signOutButtonDivClass">
             <button id="signOut">Sign out</button>
-    </div>
+        </div>
     </div>
     <div id="presList" class="presListDiv">
-        <div style="width:auto; height: auto; background-color: gray; margin: 10px;"></div>
-        <div>
+
+
+
+        <div id="presID" class="presIDClass">
+            <div style="width:auto; height: auto; background-color: gray; margin: 10px;">
+            </div>
+            <div>
                 <h2>Pres title</h2>
                 <p>info om presentasjon</p>
+            </div>
         </div>
+
+
         
     </div>
 </body>
@@ -34,17 +41,16 @@
     let welcome = document.getElementById("loggedInnId");
     let logout = document.getElementById('signOut');
     let newpres = document.getElementById('createNewPres');
+    let presList = document.getElementById('presList');
 
     window.onload = init();
 
     async function init(){
         let username = localStorage.getItem("loggedin");
         let token = localStorage.getItem(`logintoken`);
-
         if(username && token) {
             welcome.innerHTML = `Logged in as ${username}`;
-            let presentation = JSON.parse(window.localStorage.getItem('presentation'));
-
+            loadPresentations(token);
             logout.addEventListener('click', endSession);
             newpres.addEventListener('click', startPres);
         }
@@ -53,14 +59,64 @@
         }
     }
 
+    async function loadPresentations(token) {
+        let userid = localStorage.getItem(`loggedID`);
+        let url = `http://localhost:3000/presentations`;
+        let updata = {
+            userid: userid
+        };
+        let cfg = {
+            method: "GET",
+            headers: {"Content-Type":"application/json",
+                "authorization": `${token}`,
+                "userid" : `${userid}`},
+        };
+        let resp = await fetch(url, cfg);
+        if(resp.ok){
+            let presentations = await resp.json();
+            console.log("Fetched it all!");
+            let test2 = presentations.allprts[0].slide;
+            console.log(test2);
+            let test = JSON.parse(test2);
+            console.log(test);
+        }
+    }
+
     async function endSession() {
         localStorage.clear();
         window.location.href = `index.html`;
     }
-
     function startPres() {
         window.location.href = `editMode.html`;
     }
+
+/*
     //code to get the presentations and push them in the DIV with a clickable button
+    function loadPres(){
+
+        //Fetch stuff to get the presentations
+        //test ting 
+        let aTempPresDiv = `<div style="width:auto; height: auto; background-color: gray; margin: 10px;"></div>
+            <div>
+                <h2>Pres title</h2>
+                <p>info om presentasjon</p>
+            </div>`
+
+
+        for(let i = 0; i < presentations.length; i++){
+            let presDiv = document.createElement("div");
+            presDiv.innerHTML = presentations[i];
+            presDiv.addEventListener("click", function () {
+                
+            });
+            presDiv.setAttribute("id", `presID${i}`);
+            presDiv.setAttribute("class", `presIDClass`);
+            presList.appendChild(presDiv);
+        }
+    }
+    
+*/
+
 </script>
+
 </html>

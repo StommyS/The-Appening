@@ -7,7 +7,6 @@ const authenticate = function (req, res, next) {
     if(token) {
         try {
             let logindata = jwt.verify(token, check.token);
-            console.log(logindata);
             next();
         } catch (err) {
             res.status(403).json({ msg: "Not a valid token" });

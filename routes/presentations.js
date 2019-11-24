@@ -1,13 +1,15 @@
 const express = require("express");
 const route = express.Router();
 
+const authenticate = require('../modules/auth.js');
+
 const secrets = require('../secret.js');
 const dbURI = secrets.dbURI;
 const dbConnection  = process.env.DATABASE_URL || dbURI;
 const db = require("../modules/db")(dbConnection);
 
 
-route.post('/', async function (req, res) {
+route.post('/', authenticate, async function (req, res) {
     let updata = req.body;
 
     try {
@@ -24,12 +26,30 @@ route.post('/', async function (req, res) {
     }
 });
 
-// Update TITLE
+route.post('/share', authenticate, async function (req, res) {
+   let updata = req.body;
+
+   try {
+       let sharedPresentation = await db.sharepresentation(updata.title, updata.slides, updata.theme, updata.userid, updata.recipient);
+       if(await sharedPresentation) {
+           res.status(200).json({message: "Presentation shared successfully."});
+       }
+       else {
+           res.status(500).json({message: "Sharing failed."});
+       }
+   }
+   catch(err) {
+       console.log(err);
+       res.status(500).json({ error: err});
+   }
+});
+
+// Update ALL presentation
 route.put('/', async function (req, res) {
     let updata = req.body;
 
     try {
-        let updatedPresentation = await db.updatepresentation(updata.title, updata.pId);
+        let updatedPresentation = await db.updatepresentation(updata.title, updata.slides, updata.theme, updata.pId);
         if(await updatedPresentation) {
             res.status(200).json({message: "Presentation updated successfully"});
         } else {
@@ -43,7 +63,8 @@ route.put('/', async function (req, res) {
 });
 
 // Update CONTENT
-route.put('/update', async function (req, res) {
+// Now superfluous
+route.put('/update', authenticate, async function (req, res) {
     let updata = req.body;
 
     try {
@@ -60,14 +81,13 @@ route.put('/update', async function (req, res) {
     }
 });
 
-route.get('/', async function(req,res) {
-    let updata = req.body;
-    let presentation = null; 
-
+route.get('/', authenticate, async function(req, res) {
+    let updata = req.headers;
+    let presentations = null;
     try {
-        presentation= await db.getpresentation(updata.userid);
-        if(await presentation) {
-            await res.status(200).json({message: "Presentation found"});
+        presentations = await db.getpresentation(updata.userid);
+        if(await presentations) {
+            await res.status(200).json({message: "Presentations found", allprts: presentations});
         }
         else {
             res.status(500).json({message: "No presentations!"})//or nothing, or connection issues
@@ -79,7 +99,7 @@ route.get('/', async function(req,res) {
     }
 });
 
-route.delete('/', async function (req, res) {
+route.delete('/', authenticate, async function (req, res) {
     let updata = req.body;
     
     try {
@@ -95,5 +115,23 @@ route.delete('/', async function (req, res) {
         res.status(500).json({error: err});
     }
  });
+
+route.delete('/all', authenticate, async function (req, res) {
+    let updata = req.body;
+
+    try {
+        let alldeleted = await db.deleteyours(updata.userid);
+        if(await alldeleted) {
+            res.status(200).json({message: "All your presentations are now deleted."});
+        }
+        else {
+            res.status(500).json({message: "Failed to delete all presentations"});
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({error: err});
+    }
+});
 
 module.exports = route;
