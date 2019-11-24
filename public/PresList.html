@@ -33,12 +33,22 @@
     <label for="share">share with username</label>
     <input id="share" type="text">
     <button id="sharebtn">share!</button>
+    <button id="unsharebtn">unshare!</button>
 </div>
 </body>
 
 <script>
     const shareinp = document.getElementById('share');
     const sharebtn = document.getElementById('sharebtn');
+    const unsharebtn = document.getElementById('unsharebtn');
+    const titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
+    const presentation = {
+        id: undefined,
+        title: "Ye Olde Presentatione",
+        theme: "BW",
+        slides: [titleSlideTemp]
+    };
+
 
     /// ---------------------------------------------
     let welcome = document.getElementById("loggedInnId");
@@ -104,19 +114,11 @@
 
 
     sharebtn.addEventListener('click', sharePresentationWith);
+    unsharebtn.addEventListener('click', unsharePresentation);
 
     async function sharePresentationWith() {
         let token = localStorage.getItem(`logintoken`);
         let userid = localStorage.getItem(`loggedID`);
-
-        let titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
-
-        presentation = {
-            id: undefined,
-            title: "Ye Olde Presentatione",
-            theme: "BW",
-            slides: [titleSlideTemp]
-        };
 
         const baseurl = `http://localhost:3000/presentations/share`;
         let recipient = shareinp.value;
@@ -140,6 +142,35 @@
         }
         else {
             alert("We couldn't share your presentation.");
+        }
+    }
+
+    async function unsharePresentation() {
+        let url = `http://localhost:3000/presentations/unshare`;
+        let token = localStorage.getItem(`logintoken`);
+        let userid = localStorage.getItem(`loggedID`);
+
+        let updata = {
+            title : presentation.title,
+            userid: userid
+        };
+
+        let cfg = {
+            method: "DELETE",
+            headers: {
+                "Content-Type":"application/json",
+                "authorization": `${token}`
+            },
+            body: JSON.stringify(updata)
+        };
+        let resp = await fetch(url,cfg);
+        let data = await resp.json();
+        console.log(data);
+        if(resp.ok) {
+            alert("Presentation unshared.");
+        }
+        else {
+            alert("Presentation unsharing failed.");
         }
     }
 </script>

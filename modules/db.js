@@ -4,7 +4,6 @@ const db = function(dconnectionString) {
     const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
-        await pool.connect(); // Did I connect? throw an error??
         const res = await pool.query(query, params);
         let response = res.rows; // Did we get anything?? Dont care. SEP
         return response
@@ -63,7 +62,6 @@ const db = function(dconnectionString) {
             userData = await runQuery('UPDATE "user" SET "username" = $2, "password" = $3, "email" = $4 WHERE id = $1 RETURNING *',[id, name, pwhash, email]);
             return await userData;
         } catch (error) {
-            //deal with error.... done?
             return userData;
         }
     };
@@ -76,7 +74,6 @@ const db = function(dconnectionString) {
                 [title, slide, theme, userid, true, userid]);
             return await presentationData[0];
         } catch (error) {
-            //we about to find out
             return await presentationData;
         }
     };
@@ -148,11 +145,12 @@ const db = function(dconnectionString) {
         let unshared = null;
 
         try {
-            unshared = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 AND "title" = $2 AND "writable" = $3 RETURNING "userid', [owner, title, false]);
+            unshared = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 AND "title" = $2 AND "writable" = $3 RETURNING *', [owner, title, false]);
             return await unshared;
         }
         catch(error) {
             console.log(error);
+            console.log("it failed");
             return unshared;
         }
     };

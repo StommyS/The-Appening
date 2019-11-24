@@ -148,7 +148,6 @@ route.delete('/all', authenticate, async function (req, res) {
 
 route.delete('/unshare', authenticate, async function (req,res) {
     let updata = req.body;
-    let success = true;
 
     try{
         let unshared = await db.unsharepres(updata.userid, updata.title);

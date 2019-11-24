@@ -61,6 +61,7 @@ route.get('/', authenticate, async function(req,res) {
 route.delete('/delete', authenticate, async function (req, res) {
    let updata = req.body;
    try {
+
        let deletedUser = await db.deleteuser(updata.name);
        await res.status(200).json({message: "User successfully deleted", username: deletedUser.name, email: deletedUser.email});
    }
@@ -116,7 +117,7 @@ route.post('/login', async function(req, res) {
 
 route.delete('/wipe', authenticate, async function(req,res) {
     try {
-        let deletion = await db.deleteall();
+        let deletion = await db.cleardb();
         if(await deletion) {
             res.status(200).json({message: "Users table cleared."});
         }
