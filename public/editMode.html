@@ -123,7 +123,6 @@
     }
     //---------loading slides in the presentation-------------
     async function loadSlides() {
-        //removing all childs
         while (slideList.firstChild) {
             slideList.removeChild(slideList.firstChild);
         }
@@ -143,7 +142,6 @@
             slideDiv.setAttribute("class", `slidePreviewDivSmall`);
             slideList.appendChild(slideDiv);
         }
-        console.log("end of loadSLides: " + atSlide);
     }
     //------------------------------------------------------------
     function changeCurrentSlide(newSlideTypeHTML, slideID) {
@@ -158,7 +156,6 @@
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
     }
     function createNewSlide(typeOfSlide) {
-        //save current slide
         presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
         atSlide++;
         changeCurrentSlide(typeOfSlide, atSlide);
@@ -188,16 +185,14 @@
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
     }
     async function saveToWeb() {
-        console.log("saving to web");
         if(localStorage.getItem(`presentation`)) {
-            console.log("found presentation in localstorage");
-
             let baseurl = `http://localhost:3000/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
             if(presentation.id) {
                 console.log("presentation already has id");
                 presentation.slides = JSON.stringify(presentation.slides);
+                console.log(presentation.slides);
                 let cfg = {
                     method: "PUT",
                     headers: {"Content-Type":"application/json",
@@ -205,7 +200,7 @@
                     body: JSON.stringify(presentation)
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
-                if(resp.ok) {
+                if(await resp.ok) {
                     alert("Presentation saved successfully.");
                     return true;
                 }
@@ -248,19 +243,16 @@
         console.log("newTitle");
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
         createNewSlide(titleSlideTemp);
-        console.log("on new title, the presentation contains: " + presentation.slides);
     });
     btnNewImageSlide.addEventListener('click', async function (evt) {
         console.log("newImage");
         createNewSlide(imageSlideTemp);
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
-        console.log("on new image, the presentation contains: " + presentation.slides);
     });
     btnNewTextSlide.addEventListener('click', async function (evt) {
         console.log("newText");
         createNewSlide(textSlideTemp);
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
-        console.log("on new text, the presentation contains: " + presentation.slides);
     });
     btnOrangeTheme.addEventListener('click', async function (evt) {
         console.log("Orange");
@@ -345,7 +337,6 @@
         savePresLocal();
         window.location.href = `presMode.html`;
         console.log("Presentation Mode");
-        console.log("on presentation mode, the presentation contains: " + presentation.slides);
     });
     btnSignOut.addEventListener('click', async function (evt) {
         if (confirm("Do you want to save this presentation before signing out?")){
@@ -356,7 +347,6 @@
         }
         localStorage.clear();
         window.location.href = `index.html`;
-        console.log("Sign Out");
     });
     btnDeletePres.addEventListener('click', async function (evt) {
         console.log("Delete Pres");

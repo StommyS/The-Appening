@@ -56,32 +56,12 @@ route.post('/share', authenticate, async function (req, res) {
    }
 });
 
-// Update ALL presentation
 route.put('/', async function (req, res) {
     let updata = req.body;
 
     try {
-        let updatedPresentation = await db.updatepresentation(updata.title, updata.slides, updata.theme, updata.pId);
+        let updatedPresentation = await db.updatepresentation(updata.title, updata.slides, updata.theme, updata.id);
         if(await updatedPresentation) {
-            res.status(200).json({message: "Presentation updated successfully"});
-        } else {
-            res.status(500).json({message: "Couldn't update presentation!"});
-        }
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({ error: err });
-    }
-});
-
-// Update CONTENT
-// Now superfluous
-route.put('/update', authenticate, async function (req, res) {
-    let updata = req.body;
-
-    try {
-        let updatedSlide = await db.updateslide(updata.slide, updata.pId);
-        if(await updatedSlide) {
             res.status(200).json({message: "Presentation updated successfully"});
         } else {
             res.status(500).json({message: "Couldn't update presentation!"});
@@ -102,7 +82,7 @@ route.get('/', authenticate, async function(req, res) {
             await res.status(200).json({message: "Presentations found", allprts: presentations});
         }
         else {
-            res.status(500).json({message: "No presentations!"})//or nothing, or connection issues
+            res.status(500).json({message: "No presentations!"});
         }
     }
     catch (err) {

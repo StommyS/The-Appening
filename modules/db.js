@@ -26,8 +26,6 @@ const db = function(dconnectionString) {
             userData =  await runQuery('SELECT * FROM public."user" WHERE "username" = $1', [name]);
             return await userData[0];
         } catch (error) {
-            // expected failure points: no such user, no data sent, no database
-            console.log(error);
             return userData;
         }
     };
@@ -38,8 +36,6 @@ const db = function(dconnectionString) {
             userData =  await runQuery('DELETE FROM public."user" WHERE "username" = $1 RETURNING *',[name]);
             return await userData[0];
         } catch (error) {
-            // expected failure points: no such user, no data sent, no database
-            console.log(error);
             return userData;
         }
     };
@@ -49,8 +45,6 @@ const db = function(dconnectionString) {
             await runQuery('DELETE FROM "user" RETURNING *');
             return await true;
         } catch (error) {
-            console.log("major error!");
-            console.log(error);
             return false;
         }
     };
@@ -85,7 +79,6 @@ const db = function(dconnectionString) {
             presentationData =  await runQuery('SELECT * FROM public.presentations WHERE "userid" = $1', [userid]);
             return await presentationData;
         } catch (error) {
-            // expected failure points: no connection, no such user
             return presentationData;
         }
     };
@@ -97,7 +90,6 @@ const db = function(dconnectionString) {
             presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1 RETURNING *', [pId]);
             return await presentationData[0];
         } catch (error) {
-            //deal with error
             return await presentationData;
         }
     };
@@ -110,19 +102,16 @@ const db = function(dconnectionString) {
           return await deleted;
       }
       catch (error) {
-          console.log(error);
           return deleted;
       }
     };
 
     const updatePresentation = async function(title, slides, theme, pId) {
         let presentationData = null;
-
         try {
-            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1, "slide = $2, "theme = $3 WHERE "pId" = $4 RETURNING *',[title, slides, theme, pId]);
+            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1, "slide" = $2, "theme" = $3 WHERE "pId" = $4 RETURNING *',[title, slides, theme, pId]);
             return await presentationData[0];
         } catch (error) {
-            //deal with error
             return await presentationData;
         }
     };
@@ -136,7 +125,6 @@ const db = function(dconnectionString) {
             return await sharedPresentation;
         }
         catch (error) {
-            console.log(error);
             return sharedPresentation;
         }
     };
@@ -149,21 +137,7 @@ const db = function(dconnectionString) {
             return await unshared;
         }
         catch(error) {
-            console.log(error);
-            console.log("it failed");
             return unshared;
-        }
-    };
-
-    const updateSlide = async function(slide, pId) {
-        let presentationData = null;
-
-        try {
-            presentationData = await runQuery('UPDATE public.presentations SET "slide" = $1 WHERE "pId" = $2 RETURNING *',[slide, pId]);
-            return await presentationData[0];
-        } catch (error) {
-            //deal with error
-            return await presentationData;
         }
     };
 
@@ -177,7 +151,6 @@ const db = function(dconnectionString) {
         getpresentation : getPresentations,
         deletepresentation : deletePresentation,
         updatepresentation : updatePresentation,
-        updateslide : updateSlide,
         sharepresentation : sharePresentation,
         unsharepres : unsharePresentation,
         deleteyours : nukePresentations
