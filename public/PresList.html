@@ -15,26 +15,14 @@
         <div id="buttonDiv" class="buttonDivClass">
             <button id="createNewPres">Create New Presentation</button>
         </div>
+        <input placeholder="user to share with" style="width: 96%; margin: 6px;"></input>
         <div id="signOutButtonDiv" class="signOutButtonDivClass">
             <button id="signOut">Sign out</button>
         </div>
     </div>
-    <div id="presList" class="presListDiv">
-
-
-
-        <div id="presID" class="presIDClass">
-            <div style="width:auto; height: auto; background-color: gray; margin: 10px;">
-            </div>
-            <div>
-                <h2>Pres title</h2>
-                <p>info om presentasjon</p>
-            </div>
-        </div>
-
-
-        
+    <div id="presList" class="presListDiv">        
     </div>
+    <button style="width: 20%;">Delete user</button>
 </body>
 
 <script>
@@ -74,11 +62,8 @@
         let resp = await fetch(url, cfg);
         if(resp.ok){
             let presentations = await resp.json();
+            loadPres(presentations);
             console.log("Fetched it all!");
-            let test2 = presentations.allprts[0].slide;
-            console.log(test2);
-            let test = JSON.parse(test2);
-            console.log(test);
         }
     }
 
@@ -90,32 +75,39 @@
         window.location.href = `editMode.html`;
     }
 
-/*
-    //code to get the presentations and push them in the DIV with a clickable button
-    function loadPres(){
 
-        //Fetch stuff to get the presentations
-        //test ting 
-        let aTempPresDiv = `<div style="width:auto; height: auto; background-color: gray; margin: 10px;"></div>
-            <div>
-                <h2>Pres title</h2>
-                <p>info om presentasjon</p>
-            </div>`
+    function loadPres(presentations){
+        for(let presentation of presentations.allprts) {
+            //getting the first slide of the presentations
+            let parsedpres = JSON.parse(presentation.slide);
+            let slideDiv = document.createElement('div');
+            let firstSlideDiv = document.createElement('div');
+            firstSlideDiv.setAttribute("class", `firstSlideDiv`);
+            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${presentation.theme}; margin: 10px;`);
+            firstSlideDiv.innerHTML = parsedpres[0];
+            slideDiv.setAttribute("class", `presIDClass`);
+            slideDiv.appendChild(firstSlideDiv);
 
-
-        for(let i = 0; i < presentations.length; i++){
-            let presDiv = document.createElement("div");
-            presDiv.innerHTML = presentations[i];
-            presDiv.addEventListener("click", function () {
-                
-            });
-            presDiv.setAttribute("id", `presID${i}`);
-            presDiv.setAttribute("class", `presIDClass`);
-            presList.appendChild(presDiv);
+            //getting other info from the slide:
+            let PresInfoDiv = document.createElement('div');
+            let presInfo = `<div class="infoClass">
+                            <div>
+                                <h2 style = "margin-bottom:5px;">${presentation.title}</h2>
+                                <p style = "margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
+                            </div>
+                            <div style="text-align: right">
+                                <button style="height:65px; font-size: 25px;">Share</button>
+                                <br>
+                                <button style="height:65px; font-size: 25px;">Unshare</button>
+                            </div>
+                            </div>`
+            PresInfoDiv.innerHTML = presInfo;
+            slideDiv.appendChild(PresInfoDiv);
+            presList.appendChild(slideDiv);
         }
     }
-    
-*/
+
+
 
 </script>
 

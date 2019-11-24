@@ -4,7 +4,6 @@ const db = function(dconnectionString) {
     const pool = new pg.Pool({ connectionString: dconnectionString });
 
     async function runQuery(query, params){
-        await pool.connect(); // Did I connect? throw an error??
         const res = await pool.query(query, params);
         let response = res.rows; // Did we get anything?? Dont care. SEP
         return response
