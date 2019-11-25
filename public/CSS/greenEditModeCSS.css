@@ -1,17 +1,17 @@
 .slidePreviewDiv{
-    background-color: green;
+    background-color: #66CC00;
 }
 
 .slidePreviewDivSmall{
-    background-color: green;
+    background-color: #66CC00;
 }
 
 .slidePreviewDivSmall h1{
-    color: rgb(4, 151, 4);
+    color: darkgreen
 }
 
 .slidePreviewDivSmall h2{
-    color: rgb(4, 151, 4);
+    color: darkgreen
 }
 
 .specialDivForThemes h1{
@@ -19,13 +19,13 @@
 }
 
  h1{
-    color: rgb(4, 151, 4);
+    color: darkgreen
  }
 
  h2{
-    color: rgb(4, 151, 4);
+    color: darkgreen
  }
 
  ul{
-    color: rgb(4, 151, 4);
+    color: darkgreen
  }

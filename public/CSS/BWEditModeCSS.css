@@ -43,6 +43,7 @@ background-color: whitw;
 }
 
 .slidePreviewDivSmall{
+    overflow: hidden;
     text-align: center;
     width: auto;
     height: 150px;
@@ -87,6 +88,11 @@ button{
     border-width: 3px;
     border-color: gray;
     border-radius: 7px;
+}
+
+button:hover{
+    background-color: gray;
+    border-color: darkgray;
 }
 
 .loggedInnClass{
@@ -166,6 +172,7 @@ body{
 
  .deleteButtonsClass{
      width: 20%;
+     height: 100%;
  }
 
  .imgSelectClass{

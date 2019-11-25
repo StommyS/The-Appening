@@ -21,19 +21,19 @@
                 <button id="btnNewTextSlide" class="button1">New Text Slide</button>
             </div>
             <div class="specialDivForThemes">
-                    
-                            <select id="imgSelectID" class="imgSelectClass" onchange="changeIMG()">
-                              <option value="cat">Cat</option>
-                              <option value="bird">Bird</option>
-                              <option value="london">London</option>
-                              <option value="watch">Watch</option>
-                              <option value="wolf">Wolf</option>
-                            </select>
-                        
+
+                <select id="imgSelectID" class="imgSelectClass" onchange="changeIMG()">
+                    <option value="cat">Cat</option>
+                    <option value="bird">Bird</option>
+                    <option value="london">London</option>
+                    <option value="watch">Watch</option>
+                    <option value="wolf">Wolf</option>
+                </select>
+
                 <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
                 <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
-                <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
-                <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
+                <button id="btnGreenTheme" class="button2" style="background-color: #66CC00; ">Green</button>
+                <button id="btnBlueTheme" class="button2" style="background-color: #65C7FC;">Blue</button>
                 <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
             </div>
             <div>
@@ -61,8 +61,12 @@
             </div>
         </div>
         <div class="deleteDivClass">
-            <button id="btnDeletePres" class="deleteButtonsClass">Delete presentation</button>
-            <button id="btnDeleteSlide" class="deleteButtonsClass">Delete slide</button>
+            <div style="text-align: left;">
+                <button id="btnDeletePres" class="deleteButtonsClass">Delete presentation</button>
+            </div>
+            <div style="text-align: right;">
+                <button id="btnDeleteSlide" class="deleteButtonsClass">Delete slide</button>
+            </div>
         </div>
     </div>
 </body>
@@ -108,7 +112,7 @@
         let logintoken = localStorage.getItem(`logintoken`);
         let loginuser = localStorage.getItem(`loggedin`);
         let loginid = localStorage.getItem(`loggedID`);
-        if(logintoken && loginuser){
+        if (logintoken && loginuser) {
             welcomeuser(loginuser);
             presentation = JSON.parse(window.localStorage.getItem('presentation'));
             console.log("did we get localstorage?");
@@ -174,42 +178,44 @@
     function welcomeuser(name) {
         welcomeBanner.innerHTML = `Logged in as ${name}`;
     }
-    function deleteCurrentSlide(){
-        presentation.slides.splice(atSlide,1);
+    function deleteCurrentSlide() {
+        presentation.slides.splice(atSlide, 1);
         atSlide--;
-        if(atSlide === -1){
+        if (atSlide === -1) {
             atSlide++
         }
-        if(presentation.slides.length === 0){
-        window.localStorage.removeItem('presentation');
-        window.location.href = `presList.html`
+        if (presentation.slides.length === 0) {
+            window.localStorage.removeItem('presentation');
+            window.location.href = `presList.html`
         }
         changeCurrentSlide(presentation.slides[atSlide], atSlide);
         loadSlides();
     }
-    function savePresLocal(){
+    function savePresLocal() {
         presentation.slides[atSlide] = slidePreviewDiv.innerHTML;
         loadSlides();
         window.localStorage.removeItem('presentation');
         window.localStorage.setItem('presentation', `${JSON.stringify(presentation)}`);
     }
     async function saveToWeb() {
-        if(localStorage.getItem(`presentation`)) {
+        if (localStorage.getItem(`presentation`)) {
             let baseurl = `http://localhost:3000/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
-            if(presentation.id) {
+            if (presentation.id) {
                 console.log("presentation already has id");
                 presentation.slides = JSON.stringify(presentation.slides);
                 console.log(presentation.slides);
                 let cfg = {
                     method: "PUT",
-                    headers: {"Content-Type":"application/json",
-                        "authorization": `${token}`},
+                    headers: {
+                        "Content-Type": "application/json",
+                        "authorization": `${token}`
+                    },
                     body: JSON.stringify(presentation)
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
-                if(await resp.ok) {
+                if (await resp.ok) {
                     alert("Presentation saved successfully.");
                     return true;
                 }
@@ -228,13 +234,15 @@
                 };
                 let cfg = {
                     method: "POST",
-                    headers: {"Content-Type":"application/json",
-                        "authorization": `${token}`},
+                    headers: {
+                        "Content-Type": "application/json",
+                        "authorization": `${token}`
+                    },
                     body: JSON.stringify(updata)
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
                 let data = await resp.json();
-                if(resp.ok) {
+                if (resp.ok) {
                     presentation.id = data.id;
                     savePresLocal();
                     alert("Presentation saved successfully.");
@@ -248,11 +256,11 @@
         }
     }
 
-    function changeIMG(){
+    function changeIMG() {
         let imgSelectID = document.getElementById('imgSelectID').value;
         imgFile = imgSelectID;
-        console.log("imgSelectID: "+ imgSelectID)
-        console.log("imgFile: "+ imgFile)
+        console.log("imgSelectID: " + imgSelectID)
+        console.log("imgFile: " + imgFile)
         imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
                     <div>
                         <img src="./IMG/${imgFile}IMG.jpg">
@@ -309,7 +317,7 @@
     btnSave.addEventListener('click', async function (evt) {
         savePresLocal();
         let saved = await saveToWeb();
-        if(saved) {
+        if (saved) {
             // popup success
         }
         else {
@@ -317,15 +325,15 @@
         }
     });
     btnPresentations.addEventListener('click', async function (evt) {
-        if(confirm("Do you want to save?")) {
+        if (confirm("Do you want to save?")) {
             savePresLocal();
             let saved = await saveToWeb();
-            if(saved) {
+            if (saved) {
                 // popup success
-                setTimeout(function(){
+                setTimeout(function () {
                     window.localStorage.removeItem('presentation');
                     window.location.href = `presList.html`;
-                },1500)
+                }, 1500)
             }
             else {
                 // popup failed to save try again
@@ -336,15 +344,15 @@
         }
     });
     btnCreateNewPresentation.addEventListener('click', async function (evt) {
-        if(confirm("Do you want to save?")) {
+        if (confirm("Do you want to save?")) {
             savePresLocal();
             let saved = await saveToWeb();
-            if(saved) {
+            if (saved) {
                 // popup success
-                setTimeout(function(){
+                setTimeout(function () {
                     window.localStorage.removeItem('presentation');
                     init();
-                },1500)
+                }, 1500)
             }
             else {
                 // popup failed to save try again
@@ -361,7 +369,7 @@
         console.log("Presentation Mode");
     });
     btnSignOut.addEventListener('click', async function (evt) {
-        if (confirm("Do you want to save this presentation before signing out?")){
+        if (confirm("Do you want to save this presentation before signing out?")) {
             savePresLocal();
             console.log("presentation saved");
         } else {
@@ -372,7 +380,7 @@
     });
     btnDeletePres.addEventListener('click', async function (evt) {
         console.log("Delete Pres");
-        if (confirm("Do you want to delete this presentation?")){
+        if (confirm("Do you want to delete this presentation?")) {
             //delete presentation
             console.log("presentation deleted");
         } else {
@@ -386,4 +394,5 @@
     });
     //-------------------------------------------------------------------------
 </script>
+
 </html>
