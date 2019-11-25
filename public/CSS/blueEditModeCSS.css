@@ -1,17 +1,17 @@
 .slidePreviewDiv{
-    background-color: blue;
+    background-color: #65C7FC;
 }
 
 .slidePreviewDivSmall{
-    background-color: blue;
+    background-color: #65C7FC;
 }
 
 .slidePreviewDivSmall h1{
-    color: rgb(4, 4, 151);
+    color: #DCF1FC;
 }
 
 .slidePreviewDivSmall h2{
-    color: rgb(4, 4, 151);
+    color: #DCF1FC;
 }
 
 .specialDivForThemes h1{
@@ -19,13 +19,31 @@
 }
 
  h1{
-     color: rgb(4, 4, 151);
+     color: #DCF1FC;
  }
 
  h2{
-    color: rgb(4, 4, 151);
+    color: #DCF1FC;
  }
 
  ul{
-    color: rgb(4, 4, 151);
+    color: #DCF1FC;
  }
+
+ .slidePreviewDivSmall{
+    color: #DCF1FC;
+    border: solid black;
+}
+
+.slidePreviewDiv{
+   color: #DCF1FC;
+   border: solid black;
+}
+
+ .chechForColorInpresList{
+    color: #DCF1FC;
+}
+
+.stayBlackClass{
+    color: black;
+}

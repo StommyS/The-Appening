@@ -16,16 +16,24 @@
             <div>
                 <button id="btnNewTitleSlide" class="button1">New Title Slide</button>
                 <br>
-                <button id="btnNewImageSlide" class="button1">New Image Slide</button>
-                <br>
+                <div class="dropdown">
+                    <button class="button1">New Image Slide</button>
+                    <div class="imgContent">
+                          <a onclick="newImageSlideFunction('cat')">Cat</a>
+                          <a onclick="newImageSlideFunction('bird')">Bird</a>
+                          <a onclick="newImageSlideFunction('london')">London</a>
+                          <a onclick="newImageSlideFunction('watch')">Watch</a>
+                          <a onclick="newImageSlideFunction('wolf')">Wolf</a>
+                    </div>
+                </div>
                 <button id="btnNewTextSlide" class="button1">New Text Slide</button>
             </div>
             <div class="specialDivForThemes">
-                <H1 style="margin-bottom: 2px; text-align: center;">Theme:</H1>
+                <h1 style="margin-bottom: 2px; text-align: center;">Theme:</h1>
                 <button id="btnOrangeTheme" class="button2" style="background-color: orange;">Orange</button>
                 <button id="btnBWTheme" class="button2" style=" color:black; background-color: white;">B&W</button>
-                <button id="btnGreenTheme" class="button2" style="background-color: green;">Green</button>
-                <button id="btnBlueTheme" class="button2" style="background-color: blue;">Blue</button>
+                <button id="btnGreenTheme" class="button2" style="background-color: #66CC00; ">Green</button>
+                <button id="btnBlueTheme" class="button2" style="background-color: #65C7FC;">Blue</button>
                 <button id="btnRedTheme" class="button2" style="background-color: red;">Red</button>
             </div>
             <div>
@@ -53,8 +61,12 @@
             </div>
         </div>
         <div class="deleteDivClass">
-            <button id="btnDeletePres" class="deleteButtonsClass">Delete presentation</button>
-            <button id="btnDeleteSlide" class="deleteButtonsClass">Delete slide</button>
+            <div style="text-align: left;">
+                <button id="btnDeletePres" class="deleteButtonsClass">Delete presentation</button>
+            </div>
+            <div style="text-align: right;">
+                <button id="btnDeleteSlide" class="deleteButtonsClass">Delete slide</button>
+            </div>
         </div>
     </div>
 </body>
@@ -62,7 +74,7 @@
 <script>
     //------------button Variables-----------
     let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
-    let btnNewImageSlide = document.getElementById('btnNewImageSlide');
+    //let btnNewImageSlide = document.getElementById('btnNewImageSlide');
     let btnNewTextSlide = document.getElementById('btnNewTextSlide');
     let btnOrangeTheme = document.getElementById('btnOrangeTheme');
     let btnBWTheme = document.getElementById('btnBWTheme');
@@ -84,14 +96,15 @@
     let slidePreview = document.getElementById('slidePreview');
     let slidePreviewDiv = document.getElementById('slidePreviewDiv');
     let presentation;
-    let titleSlideTemp = `<h1 style="overflow:hidden;">Title</h1>`;
-    let imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
+    let imgFile = "cat"
+    let titleSlideTemp = `<h1 style="overflow:hidden;" class="chechForColorInpresList">Title</h1>`;
+    let imageSlideTemp = `<h2 style="overflow:hidden;" class="chechForColorInpresList" >Image Text</h2>
                     <div>
-                        <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?cs=srgb&dl=animal-animal-photography-cat-45201.jpg&fm=jpg">
+                        <img src="./IMG/${imgFile}IMG.jpg">
                     </div>`;
     let textSlideTemp = `
-        <h2 style="overflow:hidden;">List title</h2>
-        <ul style="overflow:hidden;">
+        <h2 style="overflow:hidden;" class="chechForColorInpresList">List title</h2>
+        <ul style="overflow:hidden;" class="chechForColorInpresList">
             <li>List</li>
         </ul>`;
 
@@ -102,7 +115,7 @@
         let logintoken = localStorage.getItem(`logintoken`);
         let loginuser = localStorage.getItem(`loggedin`);
         let loginid = localStorage.getItem(`loggedID`);
-        if(logintoken && loginuser){
+        if (logintoken && loginuser) {
             welcomeuser(loginuser);
             presentation = JSON.parse(window.localStorage.getItem('presentation'));
             if (!presentation) {
@@ -172,16 +185,16 @@
     function welcomeuser(name) {
         welcomeBanner.innerHTML = `Logged in as ${name}`;
     }
-
-    function deleteCurrentSlide(){
-        presentation.slides.splice(atSlide,1);
+  
+    function deleteCurrentSlide() {
+        presentation.slides.splice(atSlide, 1);
         atSlide--;
-        if(atSlide === -1){
+        if (atSlide === -1) {
             atSlide++
         }
-        if(presentation.slides.length === 0){
-        window.localStorage.removeItem('presentation');
-        window.location.href = `presList.html`
+        if (presentation.slides.length === 0) {
+            window.localStorage.removeItem('presentation');
+            window.location.href = `presList.html`
         }
         changeCurrentSlide(presentation.slides[atSlide], atSlide);
         loadSlides();
@@ -195,7 +208,7 @@
     }
 
     async function saveToWeb() {
-        if(localStorage.getItem(`presentation`)) {
+        if (localStorage.getItem(`presentation`)) {
             let baseurl = `http://localhost:3000/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
@@ -203,13 +216,15 @@
                 presentation.slides = JSON.stringify(presentation.slides);
                 let cfg = {
                     method: "PUT",
-                    headers: {"Content-Type":"application/json",
-                        "authorization": `${token}`},
+                    headers: {
+                        "Content-Type": "application/json",
+                        "authorization": `${token}`
+                    },
                     body: JSON.stringify(presentation)
                 };
                 presentation.slides = JSON.parse(presentation.slides);
                 let resp = await fetch(`${baseurl}`, cfg);
-                if(await resp.ok) {
+                if (await resp.ok) {
                     alert("Presentation saved successfully.");
                     return true;
                 }
@@ -228,13 +243,15 @@
                 };
                 let cfg = {
                     method: "POST",
-                    headers: {"Content-Type":"application/json",
-                        "authorization": `${token}`},
+                    headers: {
+                        "Content-Type": "application/json",
+                        "authorization": `${token}`
+                    },
                     body: JSON.stringify(updata)
                 };
                 let resp = await fetch(`${baseurl}`, cfg);
                 let data = await resp.json();
-                if(resp.ok) {
+                if (resp.ok) {
                     presentation.id = data.id;
                     savePresLocal();
                     return true;
@@ -250,10 +267,22 @@
         createNewSlide(titleSlideTemp);
     });
 
-    btnNewImageSlide.addEventListener('click', async function (evt) {
+    function changeIMG(imgSelectID) {
+        imgFile = imgSelectID;
+        console.log("imgSelectID: " + imgSelectID)
+        console.log("imgFile: " + imgFile)
+        imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
+                    <div>
+                        <img src="./IMG/${imgFile}IMG.jpg">
+                    </div>`;
+        loadSlides();
+    }
+    
+    function newImageSlideFunction(imgSelectID){
+        changeIMG(imgSelectID)
         createNewSlide(imageSlideTemp);
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
-    });
+    }
 
     btnNewTextSlide.addEventListener('click', async function (evt) {
         createNewSlide(textSlideTemp);
@@ -302,7 +331,7 @@
     });
 
     btnPresentations.addEventListener('click', async function (evt) {
-        if(confirm("Do you want to save?")) {
+        if (confirm("Do you want to save?")) {
             savePresLocal();
             let saved = await saveToWeb();
             if(saved) {
@@ -322,7 +351,7 @@
     });
 
     btnCreateNewPresentation.addEventListener('click', async function (evt) {
-        if(confirm("Do you want to save?")) {
+        if (confirm("Do you want to save?")) {
             savePresLocal();
             let saved = await saveToWeb();
             if(saved) {
@@ -349,7 +378,7 @@
     });
 
     btnSignOut.addEventListener('click', async function (evt) {
-        if (confirm("Do you want to save this presentation before signing out?")){
+        if (confirm("Do you want to save this presentation before signing out?")) {
             savePresLocal();
         }
         localStorage.clear();
@@ -358,7 +387,7 @@
 
     btnDeletePres.addEventListener('click', async function (evt) {
         console.log("Delete Pres");
-        if (confirm("Do you want to delete this presentation?")){
+        if (confirm("Do you want to delete this presentation?")) {
             //delete presentation
             console.log("presentation deleted");
         } else {
@@ -372,4 +401,5 @@
     });
     //-------------------------------------------------------------------------
 </script>
+
 </html>

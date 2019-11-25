@@ -9,7 +9,7 @@ width: auto;
 height: 600px;
 margin: 1px;
 padding: 5px;
-background-color: whitw;
+background-color: white;
 }
  
 .uiMenuDiv{
@@ -43,6 +43,7 @@ background-color: whitw;
 }
 
 .slidePreviewDivSmall{
+    overflow: hidden;
     text-align: center;
     width: auto;
     height: 150px;
@@ -89,9 +90,15 @@ button{
     border-radius: 7px;
 }
 
+button:hover{
+    background-color: gray;
+    border-color: darkgray;
+}
+
 .loggedInnClass{
     margin: 1px;
     margin-right: 17px;
+    color: black;
    
     text-align: right;
 }
@@ -166,4 +173,51 @@ body{
 
  .deleteButtonsClass{
      width: 20%;
+     height: 100%;
  }
+
+ .imgSelectClass{
+    color: white;
+    border-radius: 7px;
+    display: inline-block;
+    margin: 6px 4px 4px 4px;
+    background-color: darkgray;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 3px;
+    border-color: gray;
+    border-radius: 7px;
+ }
+
+ .chechForColorInpresList{
+    color: black;
+}
+
+.stayBlackClass{
+    color: black;
+}
+
+.imgContent {
+display: none;
+position: absolute;
+background-color: darkgrey;
+min-width: 160px;
+box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+border-radius: 7px;
+}
+
+.imgContent a {
+color: white;
+font-family: sans-serif;
+padding: 10px 30px;
+text-align: center;
+text-decoration: none;
+display: block;
+border-radius: 7px;
+}
+
+.imgContent a:hover {background-color: gray;}
+
+.dropdown:hover .imgContent {display: block;}

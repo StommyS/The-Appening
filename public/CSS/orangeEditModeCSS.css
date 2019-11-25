@@ -29,3 +29,21 @@
  ul{
     color: rgb(151, 85, 4);
  }
+
+ .slidePreviewDivSmall{
+    color: #DCF1FC;
+    border: solid black;
+}
+
+.slidePreviewDiv{
+   color: #DCF1FC;
+   border: solid black;
+}
+
+ .chechForColorInpresList{
+    color: rgb(151, 85, 4);;
+}
+
+.stayBlackClass{
+    color: black;
+}
