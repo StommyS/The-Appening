@@ -101,7 +101,7 @@
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
 
-            slideDiv.addEventListener('click', function() {
+            firstSlideDiv.addEventListener('click', function() {
                 console.log(presentation);
                 goToEdit(JSON.stringify(presentation));
             });
@@ -190,7 +190,6 @@
 
     function checkForBGColor(colorFromDB){
         if(colorFromDB === "red"){
-            
             return "red"
         }else if(colorFromDB === "blue"){
             return "#65C7FC"
@@ -199,7 +198,9 @@
         }else if(colorFromDB === "white"){
             return "white"
         }else if(colorFromDB === "orange"){
-            return "orange"
+            return "orange"}
+    }
+
     async function deleteUser() {
         if(prompt('really delete this user?')) {
             
