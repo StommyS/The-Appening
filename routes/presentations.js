@@ -4,8 +4,7 @@ const route = express.Router();
 const authenticate = require('../modules/auth.js');
 
 const secrets = require('../secret.js');
-const dbURI = secrets.dbURI;
-const dbConnection  = process.env.DATABASE_URL || dbURI;
+const dbConnection  = process.env.DATABASE_URL || secrets.dbURI;
 const db = require("../modules/db")(dbConnection);
 
 
@@ -15,7 +14,7 @@ route.post('/', authenticate, async function (req, res) {
     try {
         let createdPresentation = await db.createpresentation(updata.title, updata.slides, updata.userid, updata.theme);
         if(await createdPresentation) {
-            res.status(200).json({message: "Presentation created successfully", id: createdPresentation.pId});
+            res.status(200).json({message: "Presentation created successfully", id: createdPresentation.id});
         } else {
             res.status(500).json({message: "Couldn't create presentation!"});
         }
@@ -95,7 +94,7 @@ route.delete('/', authenticate, async function (req, res) {
     let updata = req.body;
     
     try {
-        let deletedPresentation = await db.deletepresentation(updata.pId);
+        let deletedPresentation = await db.deletepresentation(updata.id);
         if(await deletedPresentation) {
             res.status(200).json({message: "Deleted presentation"});
         } else {

@@ -64,7 +64,7 @@ const db = function(dconnectionString) {
         let presentationData = null;
 
         try {
-            presentationData = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
+            presentationData = await runQuery('INSERT INTO presentations ("title", "slides", "theme", "userid", "writable", "owner") VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
                 [title, slide, theme, userid, true, userid]);
             return await presentationData[0];
         } catch (error) {
@@ -83,11 +83,11 @@ const db = function(dconnectionString) {
         }
     };
 
-    const deletePresentation = async function(pId) {
+    const deletePresentation = async function(id) {
         let presentationData = null;
 
         try {
-            presentationData = await runQuery('DELETE FROM public.presentations WHERE "pId" = $1 RETURNING *', [pId]);
+            presentationData = await runQuery('DELETE FROM public.presentations WHERE "id" = $1 RETURNING *', [id]);
             return await presentationData[0];
         } catch (error) {
             return await presentationData;
@@ -106,10 +106,10 @@ const db = function(dconnectionString) {
       }
     };
 
-    const updatePresentation = async function(title, slides, theme, pId) {
+    const updatePresentation = async function(title, slides, theme, id) {
         let presentationData = null;
         try {
-            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1, "slide" = $2, "theme" = $3 WHERE "pId" = $4 RETURNING *',[title, slides, theme, pId]);
+            presentationData = await runQuery('UPDATE public.presentations SET "title" = $1, "slides" = $2, "theme" = $3 WHERE "id" = $4 RETURNING *',[title, slides, theme, id]);
             return await presentationData[0];
         } catch (error) {
             return await presentationData;
@@ -120,7 +120,7 @@ const db = function(dconnectionString) {
         let sharedPresentation = null;
 
         try {
-            sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slide", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6)',
+            sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slides", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6)',
                 [title, slides, theme, recipient, false, owner]);
             return await sharedPresentation;
         }

@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const secrets = require('../secret.js');
 const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
 
-const dbURI = secrets.dbURI;
-const dbConnection  = process.env.DATABASE_URL || dbURI;
+const dbConnection  = process.env.DATABASE_URL || secrets.dbURI;
 const db = require("../modules/db")(dbConnection);
 
 const authenticate = require('../modules/auth.js');
