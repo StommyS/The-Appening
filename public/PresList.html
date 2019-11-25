@@ -15,14 +15,14 @@
         <div id="buttonDiv" class="buttonDivClass">
             <button id="createNewPres">Create New Presentation</button>
         </div>
-        <input placeholder="user to share with" style="width: 96%; margin: 6px;"></input>
+        <input id="share" placeholder=" user to share with" style="width: 96%; margin: 6px;"></input>
         <div id="signOutButtonDiv" class="signOutButtonDivClass">
             <button id="signOut">Sign out</button>
         </div>
     </div>
     <div id="presList" class="presListDiv">        
     </div>
-    <button style="width: 20%;">Delete user</button>
+    <button id="deleteUser" style="width: 20%;">Delete user</button>
 </body>
 
 <script>
@@ -39,6 +39,7 @@
     /// ---------------------------------------------
     let welcome = document.getElementById("loggedInnId");
     let logout = document.getElementById('signOut');
+    let userDelBtn = document.getElementById('deleteUser');
     let newpres = document.getElementById('createNewPres');
     let presList = document.getElementById('presList');
 
@@ -52,6 +53,7 @@
             loadPresentations(token);
             logout.addEventListener('click', endSession);
             newpres.addEventListener('click', startPres);
+            userDelBtn.addEventListener('click', deleteUser);
         }
         else {
             window.location.href = `index.html`;
@@ -80,14 +82,17 @@
         window.location.href = `index.html`;
     }
     function startPres() {
+        let presName = prompt("Please enter the presentation title", "");
+        if(presName !== null) {
+            localStorage.setItem('presName', presName);
+        }
         window.location.href = `editMode.html`;
     }
 
 
     function loadPres(presentations){
         for(let presentation of presentations.allprts) {
-            //getting the first slide of the presentations
-            let parsedpres = JSON.parse(presentation.slide);
+            let parsedpres = JSON.parse(presentation.slides);
             let slideDiv = document.createElement('div');
             let firstSlideDiv = document.createElement('div');
             firstSlideDiv.setAttribute("class", `firstSlideDiv`);
@@ -95,6 +100,11 @@
             firstSlideDiv.innerHTML = parsedpres[0];
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
+
+            slideDiv.addEventListener('click', function() {
+                console.log(presentation);
+                goToEdit(JSON.stringify(presentation));
+            });
 
             //getting other info from the slide:
             let PresInfoDiv = document.createElement('div');
@@ -104,23 +114,23 @@
                                 <p style = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
                             <div style="text-align: right">
-                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith()">Share</button>
+                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith(presentation)">Share</button>
                                 <br>
-                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation()">Unshare</button>
+                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation(presentation.title)">Unshare</button>
                             </div>
                             </div>`;
             PresInfoDiv.innerHTML = presInfo;
             slideDiv.appendChild(PresInfoDiv);
             presList.appendChild(slideDiv);
-            /// TODO PresInfoDiv? add event listener 'click', SELECTS (copy into local storage as 'presentation') that presentation.
-            // This is important ? I think.
-            /// TODO alternatively figure out how to get the info of the div the button is in. We need presentation title.
-    //sharebtn.addEventListener('click', sharePresentationWith);
-    //unsharebtn.addEventListener('click', unsharePresentation);
         }
     }
 
-    async function sharePresentationWith() {
+    function goToEdit(presentation) {
+        localStorage.setItem(`presentation`, presentation);
+        window.location.href = `editMode.html`;
+    }
+
+    async function sharePresentationWith(presentation) {
         let token = localStorage.getItem(`logintoken`);
         let userid = localStorage.getItem(`loggedID`);
 
@@ -130,7 +140,7 @@
         let updata = {
             title: presentation.title,
             theme: presentation.theme,
-            slides: presentation.slides,
+            slides: JSON.stringify(presentation.slides),
             userid: userid,
             recipient : recipient
         };
@@ -149,13 +159,13 @@
         }
     }
 
-    async function unsharePresentation() {
+    async function unsharePresentation(title) {
         let url = `http://localhost:3000/presentations/unshare`;
         let token = localStorage.getItem(`logintoken`);
         let userid = localStorage.getItem(`loggedID`);
 
         let updata = {
-            title : presentation.title,
+            title : title,
             userid: userid
         };
 
@@ -190,6 +200,9 @@
             return "white"
         }else if(colorFromDB === "orange"){
             return "orange"
+    async function deleteUser() {
+        if(prompt('really delete this user?')) {
+            
         }
     }
 </script>
