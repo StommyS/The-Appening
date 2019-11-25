@@ -42,7 +42,7 @@
         let password = pw.value;
 
         if(username && password) {
-            let baseurl = "http://localhost:3000/users";
+            let baseurl = "https://the-appening.herokuapp.com/users";
             let updata = {
                 name: username,
                 password: password
@@ -64,7 +64,7 @@
                 window.location.href = `PresList.html`;
             }
             else {
-                // you didn't get logged in :/
+                alert("You didn't get logged in");
             }
         }
     }
