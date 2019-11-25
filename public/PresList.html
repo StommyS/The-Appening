@@ -108,8 +108,8 @@
 
             //getting other info from the slide:
             let PresInfoDiv = document.createElement('div');
-            let presInfo = `<div class="infoClass">
-                            <div>
+            let presInfo = `<div id="infoclass" class="infoClass">
+                            <div >
                                 <h2 style = " margin-bottom:5px;">${presentation.title}</h2>
                                 <p style = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
@@ -140,7 +140,7 @@
         let updata = {
             title: presentation.title,
             theme: presentation.theme,
-            slides: JSON.stringify(presentation.slides),
+            slides: presentation.slides,
             userid: userid,
             recipient : recipient
         };
@@ -188,6 +188,37 @@
         }
     }
 
+    async function deleteUser() {
+        if (confirm('Really delete this user?')) {
+            let route = `http://localhost:3000/users/delete`;
+            let userToDelete = localStorage.getItem(`loggedin`);
+            let token = localStorage.getItem(`logintoken`);
+
+            console.log(userToDelete);
+            let updata = {
+                name: userToDelete
+            };
+            let cfg = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type":"application/json",
+                    "authorization": `${token}`
+                },
+                body: JSON.stringify(updata)
+            };
+
+            let resp = await fetch(route, cfg);
+            if(resp.ok) {
+                localStorage.clear();
+                window.location.href = `index.html`;
+            }
+            else {
+                alert("We failed to delete this user.");
+            }
+        }
+    }
+
+
     function checkForBGColor(colorFromDB){
         if(colorFromDB === "red"){
             return "red"
@@ -198,14 +229,11 @@
         }else if(colorFromDB === "white"){
             return "white"
         }else if(colorFromDB === "orange"){
-            return "orange"}
-    }
-
-    async function deleteUser() {
-        if(prompt('really delete this user?')) {
-            
+            return "orange"
         }
     }
+
+
 </script>
 
 </html>

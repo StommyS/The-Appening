@@ -60,9 +60,16 @@ route.get('/', authenticate, async function(req,res) {
 route.delete('/delete', authenticate, async function (req, res) {
    let updata = req.body;
    try {
-
        let deletedUser = await db.deleteuser(updata.name);
-       await res.status(200).json({message: "User successfully deleted", username: deletedUser.name, email: deletedUser.email});
+       if(await deletedUser) {
+           try {
+               let deletedall = await db.deleteyours(deletedUser.id);
+               await res.status(200).json({message: "User successfully deleted", username: deletedUser.name, email: deletedUser.email});
+           }
+           catch(err) {
+               res.status(500).json({error: err});
+           }
+       }
    }
    catch(err) {
        console.log(err);

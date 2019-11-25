@@ -339,7 +339,7 @@
                 window.location.href = `presList.html`;
             }
             else {
-                if (prompt(`We couldn't save your presentation.\nContinue anyway?`)) {
+                if (confirm(`We couldn't save your presentation.\nContinue anyway?`)) {
                     window.localStorage.removeItem('presentation');
                     window.location.href = `presList.html`;
                 }
