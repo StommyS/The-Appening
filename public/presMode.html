@@ -1,39 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>PRESENTATION TITLE</title>
     <link href="./CSS/presModeCSS.css" rel="stylesheet">
-    <link id="cssLinkID" href="./CSS/BWEditModeCSS.css" rel="stylesheet">
+    <link id="cssLinkID" href="" rel="stylesheet">
 </head>
+
 <body>
-<div id="container"></div>
+    <button id="startPresID">Start presentation</button>
+    <div id="container" class="slidePreviewDiv" style="width: 100%;"></div>
+
 
 </body>
 <script>
     let presentation;
+    let startPres = document.getElementById("startPresID");
     const container = document.getElementById('container');
 
-    //add event listeners
     container.addEventListener('click', nextSlide);
-    // button presses
     window.addEventListener("keydown", keyPress);
 
-    window.onload = init();
-  
-    function init() {
-        presentation = JSON.parse(window.localStorage.getItem('presentation')); // get the actual presentation
-
-        if (!presentation) {
-            presentation = {
-                id: undefined,
-                title: "ye olde presentatione",
-                theme: "cooltheme",
-                slides: [`htmltext`, "htmltextalso", "htmltextbutnotreally"]
-            };
+    startPres.addEventListener('click', async function (evt) {
+        if (container.fullscreenElement) {
+            container.exitFullscreen();
+        } else {
+            container.requestFullscreen();
         }
-        container.innerHTML = presentation.slides[0];
+        init();
+    });
 
+    function init() {
+        let logintoken = localStorage.getItem(`logintoken`);
+        let loginuser = localStorage.getItem(`loggedin`);
+
+        if (logintoken && loginuser) {
+            presentation = JSON.parse(window.localStorage.getItem('presentation'));
+
+            if (!presentation) {
+                presentation = {
+                    id: undefined,
+                    title: "Ye Olde Presentatione",
+                    theme: "BW",
+                    slides: [`<h1 style="overflow:hidden;">This is about a cat named Tom<br></h1>`, `<h2 style="overflow:hidden;">This is Tom<br></h2>
+                <div>
+                    <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg">
+                </div>`,
+                        `<h2 style="overflow:hidden;">He is:<br></h2>
+                <ul style="overflow:hidden;">
+                    <li>Cute</li><li>A good cat</li><li>Adorable</li><li>White (not racist I SWEAR!)<br></li><li>An ASSASSIN</li><li>BOO!<br></li>
+                </ul>`]
+                };
+            }
+            let cssLinkID = document.getElementById('cssLinkID');
+            if (presentation.theme === "BW") {
+                cssLinkID.setAttribute("href", `./CSS/presModeCSS.css`);
+            } else {
+                cssLinkID.setAttribute("href", `./CSS/${presentation.theme}EditModeCSS.css`);
+            }
+            container.innerHTML = presentation.slides[0];
+        }
     }
 
     let currSlide = 0;
@@ -41,21 +68,20 @@
 
     function nextSlide() {
         currSlide++;
-        if(presentation.slides[currSlide]) {
+        if (presentation.slides[currSlide]) {
             container.innerHTML = "";
             container.innerHTML = presentation.slides[currSlide];
-        }else {
-            container.innerHTML = "PRESENTATION OVER NOTHING TO SEE HERE";
+        } else {
             window.location.href = `editMode.html`;
         }
     }
 
     function prevSlide() {
         currSlide--;
-        if(presentation.slides[currSlide]) {
+        if (presentation.slides[currSlide]) {
             container.innerHTML = "";
             container.innerHTML = presentation.slides[currSlide];
-        }else {
+        } else {
             container.innerHTML = presentation.slides[0];
         }
     }
@@ -64,9 +90,8 @@
     }
 
     function keyPress(evt) {
-        console.log(evt);
         let key = evt.keyCode;
-        switch(key) {
+        switch (key) {
             case 37: prevSlide(); break; // left
             case 38: nextSlide(); break; // up
             case 39: nextSlide(); break; // right
@@ -76,6 +101,9 @@
             case 13: nextSlide(); break; // enter
         }
     }
-  
+
+
+
 </script>
+
 </html>

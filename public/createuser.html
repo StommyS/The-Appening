@@ -10,11 +10,11 @@
 
 <body>
     <h1>Wannabe-Powerpoint <br>on a sloppy day</h1>
-    <input type="text" id="User" placeholder="User">
+    <input type="text" id="User" placeholder="User" required>
     <br>
     <input type="email" id="email" placeholder="Email">
     <br>
-    <input type="password" id="Pw" placeholder="Password">
+    <input type="password" id="Pw" placeholder="Password" minlength="8" maxlength="30" required>
     <br><br>
     <button id="btnCreate">Create user</button>
     <br>
@@ -27,38 +27,53 @@
     let email = document.getElementById('email');
     let btnCreate = document.getElementById('btnCreate');
     let result = document.getElementById('result');
-    btnCreate.addEventListener('click', async function(evt) {
-        /// TODO evaluate password security risks
-        let baseurl = "http://localhost:3000/users";
-        let updata = {
-            name: user.value,
-            password: pw.value,
-            email: email.value
-        };
-        
-        let cfg = {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(updata)
-        };
-        try {
-            let resp = await fetch(`${baseurl}/create`, cfg);
-            let data = await resp.json();
-            if(resp.ok) {
-                let login = await fetch(`${baseurl}/login`,cfg);
-                let logindata = await login.json();
-                localStorage.setItem(`logintoken`, logindata.token);
-                localStorage.setItem(`loggedin`, data.username);
-                localStorage.setItem(`loggedID`, data.userid);
-                window.location.href = `PresList.html`;
+
+    window.onload = init();
+
+    function init() {
+        btnCreate.addEventListener('click', sendCreate);
+        window.addEventListener('keydown', async function(evt) {
+            if(evt.keyCode === 13) {
+                sendCreate();
             }
-            /// TODO prettier we failed message
-            result.innerHTML = data.message;
+        });
+    }
+
+    async function sendCreate() {
+        /// TODO evaluate password security risks
+        let baseurl = "https://the-appening.herokuapp.com/users";
+
+        if(user.value && pw.value && email.value) {
+            let updata = {
+                name: user.value,
+                password: pw.value,
+                email: email.value
+            };
+
+            let cfg = {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify(updata)
+            };
+            try {
+                let resp = await fetch(`${baseurl}/create`, cfg);
+                let data = await resp.json();
+                if(resp.ok) {
+                    let login = await fetch(`${baseurl}/login`,cfg);
+                    let logindata = await login.json();
+                    localStorage.setItem(`logintoken`, logindata.token);
+                    localStorage.setItem(`loggedin`, data.username);
+                    localStorage.setItem(`loggedID`, data.userid);
+                    window.location.href = `PresList.html`;
+                }
+                /// TODO prettier we failed message
+                result.innerHTML = data.message;
+            }
+            catch (err) {
+            }
         }
-        catch (err) {
-            console.log(err);
-        }
-    });   
+        else alert("You have to input data!");
+    }
 </script>
 
 </html>
