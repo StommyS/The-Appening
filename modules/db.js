@@ -117,10 +117,12 @@ const db = function(dconnectionString) {
 
     const sharePresentation = async function(title, slides, theme, owner, recipient) {
         let sharedPresentation = null;
+        console.log(title, slides, theme, owner, recipient);
 
         try {
             sharedPresentation = await runQuery('INSERT INTO presentations ("title", "slides", "theme", "userid", "writable", "owner") VALUES ($1, $2, $3, $4, $5, $6)',
                 [title, slides, theme, recipient, false, owner]);
+            console.log(await sharedPresentation);
             return await sharedPresentation;
         }
         catch (error) {
