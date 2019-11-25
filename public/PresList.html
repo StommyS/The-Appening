@@ -113,33 +113,15 @@
                                 <h2 style = " margin-bottom:5px;">${presentation.title}</h2>
                                 <p style = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
+                            <div style="text-align: right">
+                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith(presentation)">Share</button>
+                                <br>
+                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation(presentation.title)">Unshare</button>
+                            </div>
                             </div>`;
             PresInfoDiv.innerHTML = presInfo;
             slideDiv.appendChild(PresInfoDiv);
             presList.appendChild(slideDiv);
-
-            let infoclass = document.getElementById('infoclass');
-            let buttondiv = document.createElement('div');
-            buttondiv.setAttribute('style', "text-align: right");
-            infoclass.appendChild(buttondiv);
-
-            let sharebtn = document.createElement('button');
-            sharebtn.innerHTML = "Share";
-            sharebtn.setAttribute('style', "height:65px; font-size: 25px;");
-            let unsharebtn = document.createElement('button');
-            unsharebtn.innerHTML = "Unshare";
-            unsharebtn.setAttribute('style', "height:65px; font-size: 25px;");
-
-            buttondiv.appendChild(sharebtn);
-            buttondiv.appendChild(unsharebtn);
-
-            sharebtn.addEventListener('click', function() {
-                sharePresentationWith(presentation)
-            });
-            unsharebtn.addEventListener('click', function() {
-                unsharePresentation(presentation.title);
-            })
-
         }
     }
 
@@ -239,7 +221,6 @@
 
     function checkForBGColor(colorFromDB){
         if(colorFromDB === "red"){
-            
             return "red"
         }else if(colorFromDB === "blue"){
             return "#65C7FC"
