@@ -61,9 +61,10 @@
                 if(resp.ok) {
                     let login = await fetch(`${baseurl}/login`,cfg);
                     let logindata = await login.json();
+                    console.log(data);
                     localStorage.setItem(`logintoken`, logindata.token);
-                    localStorage.setItem(`loggedin`, data.username);
-                    localStorage.setItem(`loggedID`, data.userid);
+                    localStorage.setItem(`loggedin`, logindata.username);
+                    localStorage.setItem(`loggedID`, logindata.userid);
                     window.location.href = `PresList.html`;
                 }
                 /// TODO prettier we failed message

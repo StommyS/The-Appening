@@ -62,7 +62,6 @@ const db = function(dconnectionString) {
 
     const createPresentation = async function(title, slide, userid, theme) {
         let presentationData = null;
-
         try {
             presentationData = await runQuery('INSERT INTO presentations ("title", "slides", "theme", "userid", "writable", "owner") VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
                 [title, slide, theme, userid, true, userid]);
@@ -94,11 +93,11 @@ const db = function(dconnectionString) {
         }
     };
 
-    const nukePresentations = async function (userID) {
+    const unshareall = async function (userID) {
       let deleted = null;
 
       try {
-          deleted = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 RETURNING *', userID);
+          deleted = await runQuery('DELETE FROM public.presentations WHERE "owner" = $1 RETURNING *', [userID]);
           return await deleted;
       }
       catch (error) {
@@ -153,7 +152,7 @@ const db = function(dconnectionString) {
         updatepresentation : updatePresentation,
         sharepresentation : sharePresentation,
         unsharepres : unsharePresentation,
-        deleteyours : nukePresentations
+        deleteyours : unshareall
     }
 };
 

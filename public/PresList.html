@@ -101,7 +101,7 @@
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
 
-            slideDiv.addEventListener('click', function() {
+            firstSlideDiv.addEventListener('click', function() {
                 console.log(presentation);
                 goToEdit(JSON.stringify(presentation));
             });
@@ -188,6 +188,37 @@
         }
     }
 
+    async function deleteUser() {
+        if (confirm('Really delete this user?')) {
+            let route = `http://localhost:3000/users/delete`;
+            let userToDelete = localStorage.getItem(`loggedin`);
+            let token = localStorage.getItem(`logintoken`);
+
+            console.log(userToDelete);
+            let updata = {
+                name: userToDelete
+            };
+            let cfg = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type":"application/json",
+                    "authorization": `${token}`
+                },
+                body: JSON.stringify(updata)
+            };
+
+            let resp = await fetch(route, cfg);
+            if(resp.ok) {
+                localStorage.clear();
+                window.location.href = `index.html`;
+            }
+            else {
+                alert("We failed to delete this user.");
+            }
+        }
+    }
+
+
     function checkForBGColor(colorFromDB){
         if(colorFromDB === "red"){
             
@@ -200,11 +231,10 @@
             return "white"
         }else if(colorFromDB === "orange"){
             return "orange"
-    async function deleteUser() {
-        if(prompt('really delete this user?')) {
-            
         }
     }
+
+
 </script>
 
 </html>
