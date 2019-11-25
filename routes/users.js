@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const secrets = require('../secret.js');
 const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
 
-const dbURI = secrets.dbURI;
-const dbConnection  = process.env.DATABASE_URL || dbURI;
+const dbConnection  = process.env.DATABASE_URL || secrets.dbURI;
 const db = require("../modules/db")(dbConnection);
 
 const authenticate = require('../modules/auth.js');
@@ -34,7 +33,6 @@ route.post('/create', async function (req, res) {
         }
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({ error: err });
     }
 });
@@ -53,7 +51,6 @@ route.get('/', authenticate, async function(req,res) {
         }
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({error: err});
     }
 });
@@ -61,11 +58,11 @@ route.get('/', authenticate, async function(req,res) {
 route.delete('/delete', authenticate, async function (req, res) {
    let updata = req.body;
    try {
+
        let deletedUser = await db.deleteuser(updata.name);
        await res.status(200).json({message: "User successfully deleted", username: deletedUser.name, email: deletedUser.email});
    }
    catch(err) {
-       console.log(err);
        res.status(500).json({error: err});
    }
 });
@@ -76,7 +73,7 @@ route.put('/update', authenticate, async function (req, res) {
         let newname = updata.newname;
         let updatedUser = await db.updateuser(newname, updata.name);
         if (await updatedUser) {
-            res.status(200).json({message: "User successfully updated.", username: updatedUser, oldusername: updata.name, email:updatedUser.email});
+            res.status(200).json({message: "User successfully updated.", username: updatedUser.name, oldusername: updata.name, email:updatedUser.email});
         }
         else{
             res.status(500).json({message: "Database error"});
@@ -84,7 +81,6 @@ route.put('/update', authenticate, async function (req, res) {
         }
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({message: "Database malfunction", error: err});
     }
 });
@@ -94,7 +90,6 @@ route.post('/login', async function(req, res) {
    try {
        let dbuser = await db.getuser(updata.name);
        if(await dbuser) {
-
            const salt = dbuser.salt;
            const hash = crypto.createHmac('sha256', salt);
            hash.update(updata.password);
@@ -110,14 +105,13 @@ route.post('/login', async function(req, res) {
        else res.status(500).json({message: "database connection failed OR no such user"}).end();
    }
    catch(err) {
-       console.log(err);
        res.status(500).json({message: "Something went wrong :c"}).end();
    }
 });
 
 route.delete('/wipe', authenticate, async function(req,res) {
     try {
-        let deletion = await db.deleteall();
+        let deletion = await db.cleardb();
         if(await deletion) {
             res.status(200).json({message: "Users table cleared."});
         }
@@ -126,7 +120,6 @@ route.delete('/wipe', authenticate, async function(req,res) {
         }
     }
     catch(err) {
-        console.log(err);
         res.status(500).json({error: err});
     }
 });
