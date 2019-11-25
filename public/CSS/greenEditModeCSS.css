@@ -29,3 +29,21 @@
  ul{
     color: darkgreen
  }
+
+ .slidePreviewDivSmall{
+    color: #DCF1FC;
+    border: solid black;
+}
+
+.slidePreviewDiv{
+   color: #DCF1FC;
+   border: solid black;
+}
+
+ .chechForColorInpresList{
+    color: darkgreen;
+}
+
+.stayBlackClass{
+    color: black;
+}

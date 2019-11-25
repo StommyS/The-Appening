@@ -29,3 +29,21 @@
  ul{
     color: #FECCC0
  }
+
+ .slidePreviewDivSmall{
+    color: #DCF1FC;
+    border: solid black;
+}
+
+.slidePreviewDiv{
+   color: #DCF1FC;
+   border: solid black;
+}
+
+ .chechForColorInpresList{
+     color: #FECCC0;
+ }
+
+ .stayBlackClass{
+     color: black;
+ }

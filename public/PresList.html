@@ -91,7 +91,7 @@
             let slideDiv = document.createElement('div');
             let firstSlideDiv = document.createElement('div');
             firstSlideDiv.setAttribute("class", `firstSlideDiv`);
-            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${presentation.theme}; margin: 10px;`);
+            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${checkForBGColor(presentation.theme)}; margin: 10px;`);
             firstSlideDiv.innerHTML = parsedpres[0];
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
@@ -100,8 +100,8 @@
             let PresInfoDiv = document.createElement('div');
             let presInfo = `<div class="infoClass">
                             <div>
-                                <h2 style = "margin-bottom:5px;">${presentation.title}</h2>
-                                <p style = "margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
+                                <h2style = " margin-bottom:5px;">${presentation.title}</h2>
+                                <pstyle = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
                             <div style="text-align: right">
                                 <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith()">Share</button>
@@ -175,6 +175,21 @@
         }
         else {
             alert("Presentation unsharing failed.");
+        }
+    }
+
+    function checkForBGColor(colorFromDB){
+        if(colorFromDB === "red"){
+            
+            return "red"
+        }else if(colorFromDB === "blue"){
+            return "#65C7FC"
+        }else if(colorFromDB === "green"){
+            return "#66CC00"
+        }else if(colorFromDB === "white"){
+            return "white"
+        }else if(colorFromDB === "orange"){
+            return "orange"
         }
     }
 </script>

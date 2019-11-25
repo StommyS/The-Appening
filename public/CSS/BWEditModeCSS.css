@@ -98,6 +98,7 @@ button:hover{
 .loggedInnClass{
     margin: 1px;
     margin-right: 17px;
+    color: black;
    
     text-align: right;
 }
@@ -189,3 +190,11 @@ body{
     border-color: gray;
     border-radius: 7px;
  }
+
+ .chechForColorInpresList{
+    color: black;
+}
+
+.stayBlackClass{
+    color: black;
+}
