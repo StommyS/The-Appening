@@ -91,37 +91,55 @@
 
 
     function loadPres(presentations){
-        for(let currentpres of presentations.allprts) {
-            let parsedpres = JSON.parse(currentpres.slides);
+        for(let presentation of presentations.allprts) {
+            let parsedpres = JSON.parse(presentation.slides);
             let slideDiv = document.createElement('div');
             let firstSlideDiv = document.createElement('div');
             firstSlideDiv.setAttribute("class", `firstSlideDiv`);
-            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${checkForBGColor(currentpres.theme)}; margin: 10px;`);
+            firstSlideDiv.setAttribute("style", `width:auto; height: auto; background-color: ${checkForBGColor(presentation.theme)}; margin: 10px;`);
             firstSlideDiv.innerHTML = parsedpres[0];
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
 
             firstSlideDiv.addEventListener('click', function() {
-                console.log(currentpres);
-                goToEdit(JSON.stringify(currentpres));
+                console.log(presentation);
+                goToEdit(JSON.stringify(presentation));
             });
 
             //getting other info from the slide:
             let PresInfoDiv = document.createElement('div');
-            let presInfo = `<div class="infoClass">
-                            <div>
-                                <h2 style = " margin-bottom:5px;">${currentpres.title}</h2>
-                                <p style = " margin:0px;">Theme: ${currentpres.theme} <br> Slides: ${parsedpres.length}</p>
-                            </div>
-                            <div style="text-align: right">
-                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith(currentpres)">Share</button>
-                                <br>
-                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation(currentpres.title)">Unshare</button>
+            let presInfo = `<div id="infoclass" class="infoClass">
+                            <div >
+                                <h2 style = " margin-bottom:5px;">${presentation.title}</h2>
+                                <p style = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
                             </div>`;
             PresInfoDiv.innerHTML = presInfo;
             slideDiv.appendChild(PresInfoDiv);
             presList.appendChild(slideDiv);
+
+            let infoclass = document.getElementById('infoclass');
+            let buttondiv = document.createElement('div');
+            buttondiv.setAttribute('style', "text-align: right");
+            infoclass.appendChild(buttondiv);
+
+            let sharebtn = document.createElement('button');
+            sharebtn.innerHTML = "Share";
+            sharebtn.setAttribute('style', "height:65px; font-size: 25px;");
+            let unsharebtn = document.createElement('button');
+            unsharebtn.innerHTML = "Unshare";
+            unsharebtn.setAttribute('style', "height:65px; font-size: 25px;");
+
+            buttondiv.appendChild(sharebtn);
+            buttondiv.appendChild(unsharebtn);
+
+            sharebtn.addEventListener('click', function() {
+                sharePresentationWith(presentation)
+            });
+            unsharebtn.addEventListener('click', function() {
+                unsharePresentation(presentation.title);
+            })
+
         }
     }
 
@@ -137,12 +155,10 @@
         const baseurl = `http://localhost:3000/presentations/share`;
         let recipient = shareinp.value;
 
-        console.log(presentation);
-
         let updata = {
             title: presentation.title,
             theme: presentation.theme,
-            slides: JSON.stringify(presentation.slides),
+            slides: presentation.slides,
             userid: userid,
             recipient : recipient
         };
