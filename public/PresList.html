@@ -62,7 +62,7 @@
 
     async function loadPresentations(token) {
         let userid = localStorage.getItem(`loggedID`);
-        let url = `http://localhost:3000/presentations`;
+        let url = `https://the-appening.herokuapp.com/presentations`;
 
         let cfg = {
             method: "GET",
@@ -160,7 +160,7 @@
     }
 
     async function unsharePresentation(title) {
-        let url = `http://localhost:3000/presentations/unshare`;
+        let url = `https://the-appening.herokuapp.com/presentations/unshare`;
         let token = localStorage.getItem(`logintoken`);
         let userid = localStorage.getItem(`loggedID`);
 
@@ -190,7 +190,7 @@
 
     async function deleteUser() {
         if (confirm('Really delete this user?')) {
-            let route = `http://localhost:3000/users/delete`;
+            let route = `https://the-appening.herokuapp.com/users/delete`;
             let userToDelete = localStorage.getItem(`loggedin`);
             let token = localStorage.getItem(`logintoken`);
 
