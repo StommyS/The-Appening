@@ -92,6 +92,7 @@ button{
 .loggedInnClass{
     margin: 1px;
     margin-right: 17px;
+    color: black;
    
     text-align: right;
 }
@@ -156,4 +157,13 @@ body{
     font-size: 12px;
     margin: 1px 17px 1px 17px; 
     text-align: left;
+ }
+
+ .deleteDivClass{
+    display: grid; 
+    grid-template-columns: 50% 50%;
+ }
+
+ .deleteButtonsClass{
+     width: 20%;
  }

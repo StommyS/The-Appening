@@ -7,11 +7,11 @@
 }
 
 .slidePreviewDivSmall h1{
-    color: rgb(151, 4, 4);
+    color: white;
 }
 
 .slidePreviewDivSmall h2{
-    color: rgb(151, 4, 4);
+    color: white;
 }
 
 .specialDivForThemes h1{
@@ -19,9 +19,27 @@
 }
 
  h1{
-     color: rgb(151, 4, 4);
+     color: white;
  }
 
  h2{
-    color: rgb(151, 4, 4);
+    color: white;
  }
+
+ p{
+    color:white;
+ }
+
+ li{
+    color: white;
+ }
+
+.slidePreviewDivSmall{
+    color: white;
+    border: solid black;
+}
+
+.slidePreviewDiv{
+   color: white;
+   border: solid black;
+}
