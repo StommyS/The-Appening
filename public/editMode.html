@@ -274,8 +274,8 @@
 
     function changeIMG(imgSelectID) {
         imgFile = imgSelectID;
-        console.log("imgSelectID: " + imgSelectID)
-        console.log("imgFile: " + imgFile)
+        console.log("imgSelectID: " + imgSelectID);
+        console.log("imgFile: " + imgFile);
         imageSlideTemp = `<h2 style="overflow:hidden;">Image Text</h2>
                     <div>
                         <img src="./IMG/${imgFile}IMG.jpg">
@@ -284,7 +284,7 @@
     }
 
     function newImageSlideFunction(imgSelectID) {
-        changeIMG(imgSelectID)
+        changeIMG(imgSelectID);
         createNewSlide(imageSlideTemp);
         slidePreviewDiv = document.getElementById('slidePreviewDiv');
     }
@@ -379,7 +379,6 @@
     btnPresentationMode.addEventListener('click', async function (evt) {
         savePresLocal();
         window.location.href = `presMode.html`;
-        console.log("Presentation Mode");
     });
 
     btnSignOut.addEventListener('click', async function (evt) {

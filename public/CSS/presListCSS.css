@@ -20,7 +20,6 @@ button{
     grid-template-columns: 60% 20% 20%;
     height: auto;
     background-color: white;
-
 }
 
 .SignOutButtonDivClass{
@@ -35,6 +34,13 @@ button{
     height: auto;
     background-color: white;
     text-align: left;
+}
+
+.sharebtndiv {
+    display: inline-block;
+    float: right;
+    position: relative;
+    top: 10%;
 }
 
 .presIDClass{
@@ -56,9 +62,7 @@ button{
     overflow:scroll;
 }
 .infoClass{
-    display: grid;
-    grid-template-rows: 3;
-    grid-template-columns: 80% 20%;
+    display: inline-block;
     color: black;
 }
 

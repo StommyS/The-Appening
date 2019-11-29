@@ -16,6 +16,7 @@
 </body>
 <script>
     let presentation;
+    let viewonly;
     let startPres = document.getElementById("startPresID");
     const container = document.getElementById('container');
 
@@ -32,12 +33,13 @@
     });
 
     function init() {
+        viewonly = localStorage.getItem(`viewonly`);
         let logintoken = localStorage.getItem(`logintoken`);
         let loginuser = localStorage.getItem(`loggedin`);
 
         if (logintoken && loginuser) {
             presentation = JSON.parse(window.localStorage.getItem('presentation'));
-
+            console.log(presentation);
             if (!presentation) {
                 console.log("no presentation found");
                 presentation = {
@@ -73,7 +75,13 @@
             container.innerHTML = "";
             container.innerHTML = presentation.slides[currSlide];
         } else {
-            window.location.href = `editMode.html`;
+            if(viewonly){
+                window.localStorage.removeItem(`viewonly`);
+               window.location.href = `presList.html`;
+            }
+            else {
+                window.location.href = `editMode.html`;
+            }
         }
     }
 
@@ -87,7 +95,13 @@
         }
     }
     function exitPres() {
-        window.location.href = `editMode.html`;
+        if(viewonly){
+            window.localStorage.removeItem(`viewonly`);
+            window.location.href = `presList.html`;
+        }
+        else {
+            window.location.href = `editMode.html`;
+        }
     }
 
     function keyPress(evt) {
