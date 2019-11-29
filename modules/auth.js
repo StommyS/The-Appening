@@ -1,4 +1,3 @@
-const check = require('../secret.js');
 const jwt = require('jsonwebtoken');
 
 const authenticate = function (req, res, next) {
@@ -6,7 +5,7 @@ const authenticate = function (req, res, next) {
 
     if(token) {
         try {
-            let logindata = jwt.verify(token, check.token);
+            let logindata = jwt.verify(token, process.env.TOKEN_SECRET);
             next();
         } catch (err) {
             res.status(403).json({ msg: "Not a valid token" });
