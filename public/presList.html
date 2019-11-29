@@ -101,33 +101,62 @@
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
 
-            firstSlideDiv.addEventListener('click', function() {
-                console.log(presentation);
-                goToEdit(JSON.stringify(presentation));
-            });
+            if(presentation.writable) {
+                firstSlideDiv.addEventListener('click', function() {
+                    goToEdit(JSON.stringify(presentation));
+                });
+            }
+            else {
+                firstSlideDiv.addEventListener('click', function() {
+                    let viewpres = presentation;
+                    viewpres.slides = JSON.parse(viewpres.slides);
+                    goToView(JSON.stringify(viewpres));
+                })
+            }
 
             //getting other info from the slide:
-            let PresInfoDiv = document.createElement('div');
+            let presInfoDiv = document.createElement('div');
             let presInfo = `<div id="infoclass" class="infoClass">
                             <div >
                                 <h2 style = " margin-bottom:5px;">${presentation.title}</h2>
                                 <p style = " margin:0px;">Theme: ${presentation.theme} <br> Slides: ${parsedpres.length}</p>
                             </div>
-                            <div style="text-align: right">
-                                <button style="height:65px; font-size: 25px;" onclick="sharePresentationWith(presentation)">Share</button>
-                                <br>
-                                <button style="height:65px; font-size: 25px;" onclick="unsharePresentation(presentation.title)">Unshare</button>
-                            </div>
                             </div>`;
-            PresInfoDiv.innerHTML = presInfo;
-            slideDiv.appendChild(PresInfoDiv);
+            presInfoDiv.innerHTML = presInfo;
+            slideDiv.appendChild(presInfoDiv);
             presList.appendChild(slideDiv);
+
+            if(presentation.writable) {
+                let buttondiv = document.createElement('div');
+                buttondiv.classList.add("sharebtndiv");
+                presInfoDiv.appendChild(buttondiv);
+                let sharebtn = document.createElement('button');
+                sharebtn.innerHTML = "Share";
+                sharebtn.setAttribute('style', "height:65px; font-size: 25px;");
+                let unsharebtn = document.createElement('button');
+                unsharebtn.innerHTML = "Unshare";
+                unsharebtn.setAttribute('style', "height:65px; font-size: 25px;");
+                buttondiv.appendChild(sharebtn);
+                buttondiv.appendChild(unsharebtn);
+                sharebtn.addEventListener('click', function() {
+                    sharePresentationWith(presentation)
+                });
+                unsharebtn.addEventListener('click', function() {
+                    unsharePresentation(presentation.title);
+                });
+            }
         }
     }
 
     function goToEdit(presentation) {
         localStorage.setItem(`presentation`, presentation);
         window.location.href = `editMode.html`;
+    }
+
+    function goToView(presentation) {
+        window.localStorage.setItem(`viewonly`, true);
+        window.localStorage.setItem(`presentation`, presentation);
+        window.location.href = `presMode.html`;
     }
 
     async function sharePresentationWith(presentation) {
