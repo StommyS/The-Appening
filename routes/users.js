@@ -5,10 +5,9 @@ const route = express.Router();
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 
-const secrets = require('../secret.js');
-const hashtoken = process.env.TOKEN_SECRET || secrets.hashToken;
+const hashtoken = process.env.TOKEN_SECRET;
 
-const dbConnection  = process.env.DATABASE_URL || secrets.dbURI;
+const dbConnection  = process.env.DATABASE_URL;
 const db = require("../modules/db")(dbConnection);
 
 const authenticate = require('../modules/auth.js');
