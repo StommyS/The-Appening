@@ -107,7 +107,7 @@ route.post('/login', async function(req, res) {
 
            if(pwcompare === dbuser.password) {
                let payload = { userid: dbuser.id };
-               let tok = jwt.sign(payload, secrets.token, { expiresIn: "2h" }); //create token
+               let tok = jwt.sign(payload, hashtoken, { expiresIn: "2h" }); //create token
                res.status(200).json({ email: dbuser.email, userid: dbuser.id, token: tok, username: dbuser.username});
            }
            else res.status(403).json({message: "wrong password"}).end();
