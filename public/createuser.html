@@ -40,8 +40,7 @@
     }
 
     async function sendCreate() {
-        /// TODO evaluate password security risks
-        let baseurl = "http://localhost:3000/users";
+        let baseurl = "https://the-appening.herokuapp.com/users";
 
         if(user.value && pw.value && email.value) {
             let updata = {
@@ -67,7 +66,6 @@
                     localStorage.setItem(`loggedID`, logindata.userid);
                     window.location.href = `PresList.html`;
                 }
-                /// TODO prettier we failed message
                 result.innerHTML = data.message;
             }
             catch (err) {

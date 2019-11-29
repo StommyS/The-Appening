@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EDIT MODE</title>
-    <link href="./CSS/PresListCSS.css" rel="stylesheet">
+    <link href="./CSS/presListCSS.css" rel="stylesheet">
 </head>
 
 <body>
@@ -62,7 +62,7 @@
 
     async function loadPresentations(token) {
         let userid = localStorage.getItem(`loggedID`);
-        let url = `http://localhost:3000/presentations`;
+        let url = `https://the-appening.herokuapp.com/presentations`;
 
         let cfg = {
             method: "GET",
@@ -189,7 +189,7 @@
     }
 
     async function unsharePresentation(title) {
-        let url = `http://localhost:3000/presentations/unshare`;
+        let url = `https://the-appening.herokuapp.com/presentations/unshare`;
         let token = localStorage.getItem(`logintoken`);
         let userid = localStorage.getItem(`loggedID`);
 
@@ -219,7 +219,7 @@
 
     async function deleteUser() {
         if (confirm('Really delete this user?')) {
-            let route = `http://localhost:3000/users/delete`;
+            let route = `https://the-appening.herokuapp.com/users/delete`;
             let userToDelete = localStorage.getItem(`loggedin`);
             let token = localStorage.getItem(`logintoken`);
 

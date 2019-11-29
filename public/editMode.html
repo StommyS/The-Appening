@@ -74,7 +74,6 @@
 <script>
     //------------button Variables-----------
     let btnNewTitleSlide = document.getElementById('btnNewTitleSlide');
-    //let btnNewImageSlide = document.getElementById('btnNewImageSlide');
     let btnNewTextSlide = document.getElementById('btnNewTextSlide');
     let btnOrangeTheme = document.getElementById('btnOrangeTheme');
     let btnBWTheme = document.getElementById('btnBWTheme');
@@ -117,7 +116,13 @@
         let loginid = localStorage.getItem(`loggedID`);
         if (logintoken && loginuser) {
             welcomeuser(loginuser);
-            presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            try {
+                presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            }
+            catch(error) {
+                console.log(error);
+                presentation = window.localStorage.getItem('presentation');
+            }
             if (!presentation) {
                 presentation = {
                     id: undefined,
@@ -209,7 +214,7 @@
 
     async function saveToWeb() {
         if (localStorage.getItem(`presentation`)) {
-            let baseurl = `http://localhost:3000/presentations`;
+            let baseurl = `https://the-appening.herokuapp.com/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
             if (presentation.id) {
@@ -387,7 +392,7 @@
     btnDeletePres.addEventListener('click', async function (evt) {
         console.log("Delete Pres");
         if (confirm("Do you want to delete this presentation?")) {
-            let baseurl = `http://localhost:3000/presentations`;
+            let baseurl = `https://the-appening.herokuapp.com/presentations`;
             let token = localStorage.getItem(`logintoken`);
             let userid = localStorage.getItem(`loggedID`);
             let cfg = {
