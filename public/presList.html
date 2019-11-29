@@ -101,10 +101,10 @@
             slideDiv.setAttribute("class", `presIDClass`);
             slideDiv.appendChild(firstSlideDiv);
 
-            firstSlideDiv.addEventListener('click', function() {
-                console.log(presentation);
-                goToEdit(JSON.stringify(presentation));
-            });
+            if(presentation.writable){
+                firstSlideDiv.addEventListener('click', function() {
+                    goToEdit(JSON.stringify(presentation));
+                });}
 
             //getting other info from the slide:
             let PresInfoDiv = document.createElement('div');
