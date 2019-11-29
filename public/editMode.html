@@ -116,7 +116,13 @@
         let loginid = localStorage.getItem(`loggedID`);
         if (logintoken && loginuser) {
             welcomeuser(loginuser);
-            presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            try {
+                presentation = JSON.parse(window.localStorage.getItem('presentation'));
+            }
+            catch(error) {
+                console.log(error);
+                presentation = window.localStorage.getItem('presentation');
+            }
             if (!presentation) {
                 presentation = {
                     id: undefined,
